@@ -146,10 +146,14 @@ class Application {
 		// Create and add simple menu item to one of the drop down menu
 		JMenuItem newAction = new JMenuItem("New");
 		JMenuItem exitAction = new JMenuItem("Exit");
-		JMenuItem configureAction = new JMenuItem("Configure");
+		JMenuItem generalSettingsAction = new JMenuItem("General settings");
+		JMenuItem videoSettingsAction = new JMenuItem("Video settings");
+		JMenuItem audioSettingsAction = new JMenuItem("Audio settings");
 		JMenuItem helpAction = new JMenuItem("Help");
 		JMenuItem aboutAction = new JMenuItem("About"); 
 
+		//add action listeners
+		
 		exitAction.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -160,7 +164,9 @@ class Application {
 		// Add menu items to menus
 		fileMenu.add(newAction);
 		fileMenu.add(exitAction);
-		settingsMenu.add(configureAction);
+		settingsMenu.add(generalSettingsAction);
+		settingsMenu.add(videoSettingsAction);
+		settingsMenu.add(audioSettingsAction);
 		helpMenu.add(helpAction);
 		helpMenu.add(aboutAction);
 	}
