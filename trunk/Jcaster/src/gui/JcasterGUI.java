@@ -62,7 +62,11 @@ public class JcasterGUI {
 	private JTextField filenameTextField;
 	private JRadioButton rdbtnMp = new JRadioButton();
 	private JRadioButton rdbtnMov = new JRadioButton();
-	private ButtonGroup btngroup;
+	private JRadioButton rdbtnAudiovideo = new JRadioButton();
+	private JRadioButton rdbtnVideoOnly = new JRadioButton();
+	private JRadioButton rdbtnAudioOnly = new JRadioButton();
+	private ButtonGroup extensionBtngroup;
+	private ButtonGroup audioVideoTypeBtnGroup;
 	private CaptureSettings settings;
 
 	/**
@@ -97,6 +101,7 @@ public class JcasterGUI {
 		frmJcaster.setResizable(false);
 		frmJcaster.setBounds(100, 100, 450, 300);
 		frmJcaster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmJcaster.setLocationRelativeTo(null);
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{448, 0};
@@ -154,7 +159,12 @@ public class JcasterGUI {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				//setup recording settings
-				setupRecording();
+				try {
+					setupRecording();
+				} catch (Exception e2) {
+					System.out.println("Error when trying to setup recording.");
+				}
+				
 				//start recording
 				try {
 					record.startRecording();
@@ -215,9 +225,9 @@ public class JcasterGUI {
 		tabbedPane.addTab("General settings", null, panel_2, null);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
 		gbl_panel_2.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_panel_2.rowHeights = new int[]{0, 20, 0, 0};
+		gbl_panel_2.rowHeights = new int[]{0, 20, 0, 0, 0};
 		gbl_panel_2.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_2.setLayout(gbl_panel_2);
 		
 		JLabel lblFilename = new JLabel("Filename");
@@ -239,7 +249,7 @@ public class JcasterGUI {
 		
 		JLabel lblSaveLocation = new JLabel("Save location");
 		GridBagConstraints gbc_lblSaveLocation = new GridBagConstraints();
-		gbc_lblSaveLocation.insets = new Insets(0, 0, 0, 5);
+		gbc_lblSaveLocation.insets = new Insets(0, 0, 5, 5);
 		gbc_lblSaveLocation.anchor = GridBagConstraints.EAST;
 		gbc_lblSaveLocation.gridx = 0;
 		gbc_lblSaveLocation.gridy = 2;
@@ -247,7 +257,7 @@ public class JcasterGUI {
 		
 		saveLocTextField = new JTextField(CaptureSettings.getDefaultOutputDirPath());
 		GridBagConstraints gbc_saveLocTextField = new GridBagConstraints();
-		gbc_saveLocTextField.insets = new Insets(0, 0, 0, 5);
+		gbc_saveLocTextField.insets = new Insets(0, 0, 5, 5);
 		gbc_saveLocTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_saveLocTextField.gridx = 1;
 		gbc_saveLocTextField.gridy = 2;
@@ -256,10 +266,37 @@ public class JcasterGUI {
 		
 		btnBrowse = new JButton("Browse...");
 		GridBagConstraints gbc_btnBrowse = new GridBagConstraints();
-		gbc_btnBrowse.insets = new Insets(0, 0, 0, 5);
+		gbc_btnBrowse.insets = new Insets(0, 0, 5, 5);
 		gbc_btnBrowse.gridx = 2;
 		gbc_btnBrowse.gridy = 2;
 		panel_2.add(btnBrowse, gbc_btnBrowse);
+		
+		rdbtnAudiovideo = new JRadioButton("audio+video");
+		GridBagConstraints gbc_rdbtnAudiovideo = new GridBagConstraints();
+		gbc_rdbtnAudiovideo.insets = new Insets(0, 0, 0, 5);
+		gbc_rdbtnAudiovideo.gridx = 0;
+		gbc_rdbtnAudiovideo.gridy = 3;
+		panel_2.add(rdbtnAudiovideo, gbc_rdbtnAudiovideo);
+		rdbtnAudiovideo.setSelected(true); //default
+		
+		rdbtnVideoOnly = new JRadioButton("video only");
+		GridBagConstraints gbc_rdbtnVideoOnly = new GridBagConstraints();
+		gbc_rdbtnVideoOnly.insets = new Insets(0, 0, 0, 5);
+		gbc_rdbtnVideoOnly.gridx = 1;
+		gbc_rdbtnVideoOnly.gridy = 3;
+		panel_2.add(rdbtnVideoOnly, gbc_rdbtnVideoOnly);
+		
+		rdbtnAudioOnly = new JRadioButton("audio only");
+		GridBagConstraints gbc_rdbtnAudioOnly = new GridBagConstraints();
+		gbc_rdbtnAudioOnly.insets = new Insets(0, 0, 0, 5);
+		gbc_rdbtnAudioOnly.gridx = 2;
+		gbc_rdbtnAudioOnly.gridy = 3;
+		panel_2.add(rdbtnAudioOnly, gbc_rdbtnAudioOnly);
+		
+		audioVideoTypeBtnGroup = new ButtonGroup();
+		audioVideoTypeBtnGroup.add(rdbtnAudiovideo);
+		audioVideoTypeBtnGroup.add(rdbtnVideoOnly);
+		audioVideoTypeBtnGroup.add(rdbtnAudioOnly);
 		
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Video settings", null, panel, null);
@@ -293,9 +330,9 @@ public class JcasterGUI {
 		panel.add(rdbtnMov, gbc_rdbtnMov);
 		
 		//Group the radio buttons.
-	    btngroup = new ButtonGroup();
-	    btngroup.add(rdbtnMp);
-	    btngroup.add(rdbtnMov);
+	    extensionBtngroup = new ButtonGroup();
+	    extensionBtngroup.add(rdbtnMp);
+	    extensionBtngroup.add(rdbtnMov);
 	    
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Audio settings", null, panel_1, null);
@@ -348,27 +385,48 @@ public class JcasterGUI {
      * Setup recording process.
      */
     private void setupRecording() {
-    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedRadioButtonName());
-//    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, CaptureSettings.getDefaultOutputDirPath(), "test", "mov");
-//    	settings = new CaptureSettings(); //default
+    	String selectedAudioVideoType = getSelectedAudioVideoTypeRadioButtonName();
+    	if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
+    		settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName());
+    	} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.VIDEO)) {
+    		settings = new CaptureSettings(AudioVideoTypes.VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName());
+    	} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
+    		settings = new CaptureSettings(AudioVideoTypes.AUDIO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName());
+    	}
     	record = new Record(settings);
     }
     
     private void setupTimedRecording() {
-    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, filenameTextField.getName(), getSelectedRadioButtonName(), saveLocTextField.getText(), 10000);
+    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, filenameTextField.getName(), getSelectedExtensionRadioButtonName(), saveLocTextField.getText(), 10000);
     	record = new Record(settings);
     }
     
     /**
-     * Get the name of the selected radio button.
+     * Get the name of the selected extension type radio button.
      * 
      * @return String
      */
-    private String getSelectedRadioButtonName() {
+    private String getSelectedExtensionRadioButtonName() {
     	if(rdbtnMp.isSelected()) {
     		return rdbtnMp.getText();
     	} else if(rdbtnMov.isSelected()) {
     		return rdbtnMov.getText();
+    	}
+    	return null;
+    }
+    
+    /**
+     * Get the name of the selected audio/video type radio button.
+     * 
+     * @return String
+     */
+    private String getSelectedAudioVideoTypeRadioButtonName() {
+    	if(rdbtnAudiovideo.isSelected()) {
+    		return AudioVideoTypes.AUDIO_AND_VIDEO;
+    	} else if(rdbtnVideoOnly.isSelected()) {
+    		return AudioVideoTypes.VIDEO;
+    	} else if(rdbtnAudioOnly.isSelected()) {
+    		return AudioVideoTypes.AUDIO;
     	}
     	return null;
     }

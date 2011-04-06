@@ -61,7 +61,6 @@ public class Record {
 
         //register Writer to SourceGroup
         registerWriterToSourceGroup(sourceGroup, settings);
-        
     }
 
     /**
@@ -90,14 +89,10 @@ public class Record {
      * Start recording process.
      */
     public void startRecording() {
-    	try {
-        	//setup processing
-        	SourceGroup.setupProcessingOnAllSources();
-        	//start processing
-        	SourceGroup.beginProcessingOnAllSources();
-		} catch (Exception e) {
-			System.out.println("Error when trying to start recording process.");
-		}
+    	//setup processing
+    	SourceGroup.setupProcessingOnAllSources();
+    	//start processing
+    	SourceGroup.beginProcessingOnAllSources();
     }
     
     /**
@@ -105,12 +100,7 @@ public class Record {
      */
     public void stopRecording() {
     	//stop process
-    	try {
-        	//stop processing
-    		SourceGroup.stopProcessingOnAllSources();
-		} catch (Exception e) {
-			System.out.println("Error when trying to stop recording process.");
-		}
+    	SourceGroup.stopProcessingOnAllSources();
     }
     
 }
