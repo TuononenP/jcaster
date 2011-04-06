@@ -37,9 +37,9 @@ public class CaptureSettings {
      */
 	public CaptureSettings() {
     	setAudioVideoType(AudioVideoTypes.AUDIO_AND_VIDEO);
+    	setOutputDirPath(System.getProperty("user.home") + File.separator + "Desktop" + File.separator); //outputs to desktop
     	setFileName("test");
     	setFileType("mp4");
-    	setOutputDirPath(System.getProperty("user.home") + File.separator + "Desktop" + File.separator); //outputs to desktop
     	setCaptureDuration(10000);
 	}
 
@@ -73,6 +73,7 @@ public class CaptureSettings {
     	setOutputDirPath(outputDirPath);
     	setFileName(fileName);
     	setFileType(fileType);
+    	setCaptureDuration(10000);
 	}
 	
 	public String getAudioVideoType() {

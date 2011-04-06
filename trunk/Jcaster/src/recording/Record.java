@@ -14,7 +14,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package recording;
 
-//  Native Java Classes
 //import java.util.Timer;
 //import java.util.TimerTask;
 
@@ -91,10 +90,14 @@ public class Record {
      * Start recording process.
      */
     public void startRecording() {
-    	//setup processing
-    	SourceGroup.setupProcessingOnAllSources();
-    	//start processing
-    	SourceGroup.beginProcessingOnAllSources();
+    	try {
+        	//setup processing
+        	SourceGroup.setupProcessingOnAllSources();
+        	//start processing
+        	SourceGroup.beginProcessingOnAllSources();
+		} catch (Exception e) {
+			System.out.println("Error when trying to start recording process.");
+		}
     }
     
     /**
@@ -102,7 +105,12 @@ public class Record {
      */
     public void stopRecording() {
     	//stop process
-    	SourceGroup.stopProcessingOnAllSources();
+    	try {
+        	//stop processing
+    		SourceGroup.stopProcessingOnAllSources();
+		} catch (Exception e) {
+			System.out.println("Error when trying to stop recording process.");
+		}
     }
     
 }

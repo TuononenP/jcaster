@@ -26,44 +26,39 @@ import com.cattura.packet_multibroadcaster.value_objects.AudioPacket;
 
 import constants.AudioConstants;
 
-public class MicrophoneAudioSource extends Source
-{
-    //  Constants
-    private final byte[] TEMP_BUFFER;
+public class MicrophoneAudioSource extends Source {
+	
+	//  Constants
+	private final byte[] TEMP_BUFFER;
 
-    //  Instance variables
-    private TargetDataLine _targetDataLine;
+	//  Instance variables
+	private TargetDataLine _targetDataLine;
 
-    //----------------------------------------------------------------------------------------------
-    //  Initialize
-    //----------------------------------------------------------------------------------------------
-    public MicrophoneAudioSource (String $id)
-    {
-        super($id, AudioVideoTypes.AUDIO);
+	//----------------------------------------------------------------------------------------------
+	//  Initialize
+	//----------------------------------------------------------------------------------------------
+	public MicrophoneAudioSource (String $id) {
+		super($id, AudioVideoTypes.AUDIO);
 
-        TEMP_BUFFER = new byte[AudioConstants.TARGET_DATA_LINE_BYTE_SIZE];
+		TEMP_BUFFER = new byte[AudioConstants.TARGET_DATA_LINE_BYTE_SIZE];
 
-		try
-		{
+		try {
 			_targetDataLine = (TargetDataLine)AudioSystem.getLine(new DataLine.Info(TargetDataLine.class, AudioConstants.CATTURA_CONFIGURED_AUDIO_FORMAT));
-            _targetDataLine.open(AudioConstants.CATTURA_CONFIGURED_AUDIO_FORMAT);
-            _targetDataLine.start();
+			_targetDataLine.open(AudioConstants.CATTURA_CONFIGURED_AUDIO_FORMAT);
+			_targetDataLine.start();
 		}
-		catch (LineUnavailableException $ignore)
-		{
+		catch (LineUnavailableException $ignore) {
 		}
-    }
+	}
 
-    //----------------------------------------------------------------------------------------------
-    //  Functions
-    //----------------------------------------------------------------------------------------------
-    @Override
-	protected void packAudioPacket (AudioPacket $audioPacket)
-    {
-        if (_targetDataLine.read(TEMP_BUFFER, 0, TEMP_BUFFER.length) > 0)
-        {
-            $audioPacket.pack(System.nanoTime(), TEMP_BUFFER);
-        }
-    }
+	//----------------------------------------------------------------------------------------------
+	//  Functions
+	//----------------------------------------------------------------------------------------------
+	@Override
+	protected void packAudioPacket (AudioPacket $audioPacket) {
+		if (_targetDataLine.read(TEMP_BUFFER, 0, TEMP_BUFFER.length) > 0) {
+			$audioPacket.pack(System.nanoTime(), TEMP_BUFFER);
+		}
+	}
 
 }

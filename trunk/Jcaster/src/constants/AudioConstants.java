@@ -17,8 +17,8 @@ package constants;
 //  Native Java Classes
 import javax.sound.sampled.AudioFormat;
 
-public class AudioConstants
-{
+public class AudioConstants {
+	
     // Constants
     public static final int TARGET_DATA_LINE_BYTE_SIZE = 50000;                 //  Size of the buffer that is transfered between the Microphone input and the Xuggler IAudioSamples
 	public static final float SAMPLE_RATE = 44100.0F;                           //  8000, 11025, 16000, 22050, 44100 in Hz

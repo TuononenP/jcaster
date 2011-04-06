@@ -17,8 +17,8 @@ package constants;
 //  Native Java Classes
 import java.awt.Toolkit;
 
-public class VideoConstants
-{
+public class VideoConstants {
+	
     //  Constants
     public static final int SCREEN_WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
     public static final int SCREEN_HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
