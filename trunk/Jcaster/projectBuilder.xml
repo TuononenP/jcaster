@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <project name="Jcaster.makejar" default="makejar" basedir=".">
+  <target name ="makejar" description="Create a jar for the Jcaster project">
+    <jar jarfile="Jcaster.jar" includes="*.class, *.jar" basedir="bin"/>
+  </target>
+  </project>

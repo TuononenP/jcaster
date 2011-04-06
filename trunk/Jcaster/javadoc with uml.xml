@@ -1,0 +1,23 @@
+<target name="javadocs" depends="build"
+	description="Generates javadoc and also UML Diagram">
+	<mkdir dir="/doc" />
+	<javadoc sourcepath="/src" packagenames="*"
+		destdir="/doc" classpathref="java.classpath"
+		private="true">
+		<doclet name="org.umlgraph.doclet.UmlGraphDoc" path="/lib/UMLGraph.jar">
+			<param name="-attributes" />
+			<param name="-operations" />
+			<param name="-qualify" />
+			<param name="-types" />
+			<param name="-visibility" />
+		</doclet>
+	</javadoc>
+	<apply executable="dot" dest="" parallel="false">
+		<arg value="-Tpng" />
+		<arg value="-o" />
+		<targetfile />
+		<srcfile />
+		<fileset dir="" includes="*.dot" />
+		<mapper type="glob" from="*.dot" to="*.png" />
+	</apply>
+</target>
