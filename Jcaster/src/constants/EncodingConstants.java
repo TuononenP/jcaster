@@ -14,8 +14,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package constants;
 
-public class EncodingConstants
-{
+public class EncodingConstants {
+	
     // Constants
 	public static final int AUDIO_STREAM_ID = 1;
 	public static final int VIDEO_STREAM_ID = 0;

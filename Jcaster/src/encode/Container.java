@@ -34,31 +34,26 @@ import constants.AudioConstants;
 import constants.EncodingConstants;
 import constants.VideoConstants;
 
-public class Container extends Writer
-{
+public class Container extends Writer {
     //  Constants
     private static final TimeUnit NANOSECONDS_TIME_UNIT = TimeUnit.NANOSECONDS;
     
-    //  Static variables
     //  Instance variables
     private IMediaWriter _mediaWriter;
 
     //----------------------------------------------------------------------------------------------
     //  Initialize
     //----------------------------------------------------------------------------------------------
-    public Container (String $ouputDirectory, String $filename, String $extension, String $type)
-    {
+    public Container (String $ouputDirectory, String $filename, String $extension, String $type) {
         super($ouputDirectory, $filename, $extension, $type);
     }
 
     @Override
-	public void encodeAudio (AudioPacket $packet)
-    {
+	public void encodeAudio (AudioPacket $packet) {
         byte[] audioSamplesByteArray = $packet.getAudioSamplesAsByteArray();
         int audioSamplesByteArrayLength = audioSamplesByteArray.length;
 
-        if (audioSamplesByteArrayLength > 0)
-        {
+        if (audioSamplesByteArrayLength > 0) {
             IBuffer audioBuffer = IBuffer.make(null, audioSamplesByteArray, 0, audioSamplesByteArrayLength);
             audioBuffer.setType(IBuffer.Type.IBUFFER_SINT16);
 
@@ -70,14 +65,12 @@ public class Container extends Writer
     }
 
     @Override
-	public void encodeVideo (VideoPacket $packet)
-    {
+	public void encodeVideo (VideoPacket $packet) {
         _mediaWriter.encodeVideo(EncodingConstants.VIDEO_STREAM_ID, ConverterFactory.convertToType($packet.getBufferedImage(), BufferedImage.TYPE_3BYTE_BGR), $packet.getTimestamp(), NANOSECONDS_TIME_UNIT);
     }
 
     @Override
-	public void finalizeProcessing ()
-    {
+	public void finalizeProcessing () {
         super.finalizeProcessing();
 
         _mediaWriter.flush();
@@ -88,21 +81,18 @@ public class Container extends Writer
     //  Functions
     //----------------------------------------------------------------------------------------------
     @Override
-	public void setupProcessing ()
-    {
+	public void setupProcessing() {
         super.setupProcessing();
 
         _mediaWriter = ToolFactory.makeWriter(getOutputDirectory() + File.separator + getFilename() + "." + getExtension());
         _mediaWriter.open();
         _mediaWriter.setForceInterleave(true);
 
-        if (getSupportsVideo())
-        {
+        if (getSupportsVideo()) {
             _mediaWriter.addVideoStream(EncodingConstants.VIDEO_STREAM_ID, 0, ICodec.guessEncodingCodec(null, null, getOutputDirectory() + File.separator + getFilename() + "." + getExtension(), null, ICodec.Type.CODEC_TYPE_VIDEO), VideoConstants.SCREEN_WIDTH, VideoConstants.SCREEN_HEIGHT);
         }
 
-        if (getSupportsAudio())
-        {
+        if (getSupportsAudio()) {
             _mediaWriter.addAudioStream(EncodingConstants.AUDIO_STREAM_ID, 0, ICodec.guessEncodingCodec(null, null, getOutputDirectory() + File.separator + getFilename() + "." + getExtension(), null, ICodec.Type.CODEC_TYPE_AUDIO), AudioConstants.NUMBER_OF_CHANNELS, AudioConstants.SAMPLE_RATE_AS_INT);
         }
     }

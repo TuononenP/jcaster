@@ -158,6 +158,7 @@ public class JcasterGUI {
 				//start recording
 				try {
 					record.startRecording();
+					//TODO: Mimimize frame to taskbar
 				} catch (Exception e2) {
 					System.out.println("Capture settings must be configured.");
 				}
@@ -347,9 +348,9 @@ public class JcasterGUI {
      * Setup recording process.
      */
     private void setupRecording() {
-//    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, filenameTextField.getName(), getSelectedRadioButtonName(), saveLocTextField.getText());
-//    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, "test", "mp4", CaptureSettings.getDefaultOutputDirPath());
-    	settings = new CaptureSettings(); //default
+    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedRadioButtonName());
+//    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, CaptureSettings.getDefaultOutputDirPath(), "test", "mov");
+//    	settings = new CaptureSettings(); //default
     	record = new Record(settings);
     }
     
