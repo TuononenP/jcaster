@@ -24,7 +24,9 @@ public class CaptureSettings {
     private String audioVideoType;
     private String fileName;
     private String fileType;
-    private String outputDirPath = System.getProperty("user.home") + File.separator + "Desktop" + File.separator;
+    private final static String defaultOutputDirPath =
+    	System.getProperty("user.home") + File.separator + "Desktop" + File.separator;
+    private String outputDirPath;
     private int captureDuration = 10000;
     
     // Getters and Setters
@@ -38,26 +40,41 @@ public class CaptureSettings {
     	setFileName("test");
     	setFileType("mp4");
     	setOutputDirPath(System.getProperty("user.home") + File.separator + "Desktop" + File.separator); //outputs to desktop
-    	setCaptureDuration(10000); //records 10s TODO: REMOVE/CHANGE
+    	setCaptureDuration(10000);
 	}
 
 	/**
-	 * Specific capture settings.
+	 * Specific capture settings for timed recording.
 	 * 
 	 * @param audioVideoType
 	 * @param fileName
 	 * @param fileType
 	 * @param outputDirPath
-	 * @param captureDuration TODO: REMOVE/CHANGE
+	 * @param captureDuration
 	 */
-	public CaptureSettings(String audioVideoType, String fileName, String fileType, String outputDirPath, int captureDuration) {
+	public CaptureSettings(String audioVideoType, String outputDirPath, String fileName, String fileType, int captureDuration) {
     	setAudioVideoType(audioVideoType);
+    	setOutputDirPath(outputDirPath);
     	setFileName(fileName);
     	setFileType(fileType);
-    	setOutputDirPath(outputDirPath);
-    	setCaptureDuration(captureDuration);
+    	setCaptureDuration(captureDuration); 
 	}
 
+	/**
+	 * Specific capture settings for user started/stopped recording. 
+	 * 
+	 * @param audioVideoType
+	 * @param fileName
+	 * @param fileType
+	 * @param outputDirPath
+	 */
+	public CaptureSettings(String audioVideoType, String outputDirPath, String fileName, String fileType) {
+    	setAudioVideoType(audioVideoType);
+    	setOutputDirPath(outputDirPath);
+    	setFileName(fileName);
+    	setFileType(fileType);
+	}
+	
 	public String getAudioVideoType() {
 		return audioVideoType;
 	}
@@ -74,6 +91,10 @@ public class CaptureSettings {
 		return fileType;
 	}
 
+	public static String getDefaultOutputDirPath() {
+		return defaultOutputDirPath;
+	}
+	
     public String getOutputDirPath() {
 		return outputDirPath;
 	}

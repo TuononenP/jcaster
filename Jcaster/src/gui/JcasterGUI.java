@@ -20,8 +20,9 @@ import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
-import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
+import javax.swing.ButtonGroup;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -40,6 +41,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
+import javax.swing.JTextField;
+import javax.swing.JRadioButton;
+
+import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 
 public class JcasterGUI {
 
@@ -48,6 +57,13 @@ public class JcasterGUI {
 	private JButton btnRecord;
 	private JButton btnPause;
 	private JButton btnStop;
+	private JButton btnBrowse;
+	private JTextField saveLocTextField;
+	private JTextField filenameTextField;
+	private JRadioButton rdbtnMp = new JRadioButton();
+	private JRadioButton rdbtnMov = new JRadioButton();
+	private ButtonGroup btngroup;
+	private CaptureSettings settings;
 
 	/**
 	 * Launch the application.
@@ -69,7 +85,6 @@ public class JcasterGUI {
 	 * Create the application.
 	 */
 	public JcasterGUI() {
-		setupRecording();
 		initialize();
 	}
 
@@ -138,8 +153,14 @@ public class JcasterGUI {
 		btnRecord.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				//setup recording settings
+				setupRecording();
 				//start recording
-				record.startRecording();
+				try {
+					record.startRecording();
+				} catch (Exception e2) {
+					System.out.println("Capture settings must be configured.");
+				}
 				btnRecord.setEnabled(false);
 				btnStop.setEnabled(true);
 //				btnPause.setEnabled(true); TODO: implement pause action
@@ -164,6 +185,19 @@ public class JcasterGUI {
 			}
 		});
 		
+//		btnBrowse.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				browseActionPerformed(e);
+//			}
+//		});
+		
+//		btnBrowse.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				browseActionPerformed();
+//			}
+//		});
+		
 		//add mmnemonics
 		btnRecord.setMnemonic(KeyEvent.VK_R);
 		btnPause.setMnemonic(KeyEvent.VK_P);
@@ -179,34 +213,89 @@ public class JcasterGUI {
 		JPanel panel_2 = new JPanel();
 		tabbedPane.addTab("General settings", null, panel_2, null);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[]{0, 0};
-		gbl_panel_2.rowHeights = new int[]{0, 0, 0};
-		gbl_panel_2.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_2.columnWidths = new int[]{0, 0, 0, 0, 0};
+		gbl_panel_2.rowHeights = new int[]{0, 20, 0, 0};
+		gbl_panel_2.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_2.setLayout(gbl_panel_2);
+		
+		JLabel lblFilename = new JLabel("Filename");
+		GridBagConstraints gbc_lblFilename = new GridBagConstraints();
+		gbc_lblFilename.anchor = GridBagConstraints.EAST;
+		gbc_lblFilename.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFilename.gridx = 0;
+		gbc_lblFilename.gridy = 1;
+		panel_2.add(lblFilename, gbc_lblFilename);
+		
+		filenameTextField = new JTextField("test");
+		GridBagConstraints gbc_filenameTextField = new GridBagConstraints();
+		gbc_filenameTextField.insets = new Insets(0, 0, 5, 5);
+		gbc_filenameTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_filenameTextField.gridx = 1;
+		gbc_filenameTextField.gridy = 1;
+		panel_2.add(filenameTextField, gbc_filenameTextField);
+		filenameTextField.setColumns(10);
 		
 		JLabel lblSaveLocation = new JLabel("Save location");
 		GridBagConstraints gbc_lblSaveLocation = new GridBagConstraints();
-		gbc_lblSaveLocation.anchor = GridBagConstraints.WEST;
+		gbc_lblSaveLocation.insets = new Insets(0, 0, 0, 5);
+		gbc_lblSaveLocation.anchor = GridBagConstraints.EAST;
 		gbc_lblSaveLocation.gridx = 0;
-		gbc_lblSaveLocation.gridy = 1;
+		gbc_lblSaveLocation.gridy = 2;
 		panel_2.add(lblSaveLocation, gbc_lblSaveLocation);
+		
+		saveLocTextField = new JTextField(CaptureSettings.getDefaultOutputDirPath());
+		GridBagConstraints gbc_saveLocTextField = new GridBagConstraints();
+		gbc_saveLocTextField.insets = new Insets(0, 0, 0, 5);
+		gbc_saveLocTextField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_saveLocTextField.gridx = 1;
+		gbc_saveLocTextField.gridy = 2;
+		panel_2.add(saveLocTextField, gbc_saveLocTextField);
+		saveLocTextField.setColumns(10);
+		
+		btnBrowse = new JButton("Browse...");
+		GridBagConstraints gbc_btnBrowse = new GridBagConstraints();
+		gbc_btnBrowse.insets = new Insets(0, 0, 0, 5);
+		gbc_btnBrowse.gridx = 2;
+		gbc_btnBrowse.gridy = 2;
+		panel_2.add(btnBrowse, gbc_btnBrowse);
 		
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Video settings", null, panel, null);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panel.columnWidths = new int[]{0, 0, 0, 0};
+		gbl_panel.rowHeights = new int[]{20, 0, 0};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		JLabel lblFormat = new JLabel("Format");
 		GridBagConstraints gbc_lblFormat = new GridBagConstraints();
+		gbc_lblFormat.insets = new Insets(0, 0, 0, 5);
 		gbc_lblFormat.gridx = 0;
 		gbc_lblFormat.gridy = 1;
 		panel.add(lblFormat, gbc_lblFormat);
 		
+		rdbtnMp = new JRadioButton("mp4");
+		GridBagConstraints gbc_rdbtnMp = new GridBagConstraints();
+		gbc_rdbtnMp.insets = new Insets(0, 0, 0, 5);
+		gbc_rdbtnMp.gridx = 1;
+		gbc_rdbtnMp.gridy = 1;
+		panel.add(rdbtnMp, gbc_rdbtnMp);
+		//set selected by default
+		rdbtnMp.setSelected(true);
+		
+		rdbtnMov = new JRadioButton("mov");
+		GridBagConstraints gbc_rdbtnMov = new GridBagConstraints();
+		gbc_rdbtnMov.gridx = 2;
+		gbc_rdbtnMov.gridy = 1;
+		panel.add(rdbtnMov, gbc_rdbtnMov);
+		
+		//Group the radio buttons.
+	    btngroup = new ButtonGroup();
+	    btngroup.add(rdbtnMp);
+	    btngroup.add(rdbtnMov);
+	    
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Audio settings", null, panel_1, null);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
@@ -225,6 +314,11 @@ public class JcasterGUI {
 		JMenuItem mntmExit = new JMenuItem("Exit");
 		mntmExit.setMnemonic(KeyEvent.VK_Q);
 		mnNewMenu.add(mntmExit);
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				exitActionPerformed(e);
+			}
+		});
 		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
@@ -232,18 +326,128 @@ public class JcasterGUI {
 		JMenuItem mntmHelp = new JMenuItem("Help");
 		mntmHelp.setMnemonic(KeyEvent.VK_F11);
 		mnHelp.add(mntmHelp);
+		mntmHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showHelpActionPerformed(e);
+			}
+		});
 		
 		JMenuItem mntmAbout = new JMenuItem("About");
 		mntmHelp.setMnemonic(KeyEvent.VK_A);
 		mnHelp.add(mntmAbout);
+		mntmAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showAbout();
+			}
+		});
+
 	}
 	
     /**
      * Setup recording process.
      */
     private void setupRecording() {
-    	CaptureSettings settings = new CaptureSettings(); //default settings
+//    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, filenameTextField.getName(), getSelectedRadioButtonName(), saveLocTextField.getText());
+//    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, "test", "mp4", CaptureSettings.getDefaultOutputDirPath());
+    	settings = new CaptureSettings(); //default
     	record = new Record(settings);
+    }
+    
+    private void setupTimedRecording() {
+    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, filenameTextField.getName(), getSelectedRadioButtonName(), saveLocTextField.getText(), 10000);
+    	record = new Record(settings);
+    }
+    
+    /**
+     * Get the name of the selected radio button.
+     * 
+     * @return String
+     */
+    private String getSelectedRadioButtonName() {
+    	if(rdbtnMp.isSelected()) {
+    		return rdbtnMp.getText();
+    	} else if(rdbtnMov.isSelected()) {
+    		return rdbtnMov.getText();
+    	}
+    	return null;
+    }
+    
+    /**
+     * Shows about screen.
+     */
+    private void showAbout() {
+    	JOptionPane.showMessageDialog(frmJcaster,
+    			"Author: Petri Tuononen\n" +
+    			"Date: 4/2011\n" +
+    			"Version: 0.1\n" +
+    			"GPLv3 license: This software can be used, modified and redistibuted freely.\n" +
+    			"No warranties of any kind.");
+    }
+
+    private void chooseFileSaveLocation(ActionEvent e) {
+    	File file = null;
+    	final JFileChooser fc = new JFileChooser();
+    	int result = fc.showSaveDialog(frmJcaster);
+    	switch (result) { 
+    	case JFileChooser.APPROVE_OPTION : 
+    		if (fc.getSelectedFile() != null) { // A file was selected
+    			file = fc.getSelectedFile();
+        		try {
+        			//display in textfield
+        			saveLocTextField.read(new FileReader(file.getAbsolutePath()), null );
+        		} catch (IOException ex) {
+        			System.out.println("problem accessing file"+file.getAbsolutePath());
+        		}
+    		}
+    		else { // No file selected 
+    			JOptionPane.showMessageDialog(frmJcaster, "No file was selected", "File selection info", JOptionPane.INFORMATION_MESSAGE);
+    		}
+    		break ; 
+    	case JFileChooser.CANCEL_OPTION : // Selection canceled
+    		break ; 
+    	case JFileChooser.ERROR_OPTION : // An error has occurred 
+    		JOptionPane.showMessageDialog(frmJcaster, "An error occured while selecting a file to save", "File selection error", JOptionPane.ERROR_MESSAGE);
+    		break ; 
+    	} 
+    }
+
+    /**
+     * Action for browse button.
+     * 
+     * @param e ActionEvent
+     */
+    private void browseActionPerformed() {
+    	JFileChooser fc = new JFileChooser();
+    	int returnVal = fc.showOpenDialog(frmJcaster);
+    	if (returnVal == JFileChooser.APPROVE_OPTION) {
+    		File file = fc.getSelectedFile();
+    		try {
+    			//display in textfield
+    			saveLocTextField.read(new FileReader(file.getAbsolutePath()), null );
+    		} catch (IOException ex) {
+    			System.out.println("problem accessing file"+file.getAbsolutePath());
+    		}
+    	} else {
+    		System.out.println("File access cancelled by user.");
+    	}
+    } 
+    
+    /**
+     * Action for Exit menuitem.
+     * 
+     * @param e ActionEvent
+     */
+    private void exitActionPerformed(ActionEvent e) {
+    	frmJcaster.dispose();
+    }
+    
+	/**
+     * 'Show help' menu item pressed.
+     * 
+     * @param e ActionEvent
+     */
+    private void showHelpActionPerformed(ActionEvent e) {
+            new Help().toFront();
     }
     
 }
