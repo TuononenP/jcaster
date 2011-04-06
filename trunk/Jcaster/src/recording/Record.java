@@ -53,7 +53,8 @@ public class Record {
             //audio input from microphone
             microphoneAudioSource = new MicrophoneAudioSource("MicrophoneAudioSource");
         }
-        catch (Exception $ignore) {
+        catch (Exception e) {
+        	System.out.println("Couldn't create audio or video source(s).");
         }
         
         //create a source group
@@ -86,22 +87,6 @@ public class Record {
     	}
     }
 
-    /**
-     * Setup recording process.
-     */
-    public void setupRecording() {
-    	CaptureSettings settings = new CaptureSettings(); //default settings
-        new Record(settings);
-    }
-    
-    /**
-     * Setup recording process.
-     */
-    public void setupRecording(String audioVideoType, String fileName, String fileType, String outputDirPath, int captureDuration) {
-    	CaptureSettings settings = new CaptureSettings(audioVideoType, fileName, fileType, outputDirPath, captureDuration);
-        new Record(settings);
-    }
-    
     /**
      * Start recording process.
      */

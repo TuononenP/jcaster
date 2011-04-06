@@ -14,24 +14,29 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gui;
 
-//import java.awt.EventQueue;
+import java.io.*;
 
 /**
- * Starts the application.
+ * Custom file filter for JFileChooser.
  * 
  * @author Petri Tuononen
- *
  */
-public class ApplicationStarter {
-	
-	public static void main(String[] args) throws Exception {
-		//launch application
-		Application.launch("Jcaster", new Application() {
-			void create() {
-				super.create();
-			}
-		});
-		
-	}
-	
+public class FileFilter extends javax.swing.filechooser.FileFilter {
+    
+        /**
+         * Accepts files that are either folders or .mp4, .mov and .mp3 files.
+         * @return boolean
+         */
+        public boolean accept(File f) {
+        return f.isDirectory() || f.getName().toLowerCase().endsWith(".mp4") || f.getName().toLowerCase().endsWith(".mov") || f.getName().toLowerCase().endsWith(".mp3");
+    }
+    
+        /**
+         * Returns description about file types that can be selected.
+         * @return description
+         */
+    public String getDescription() {
+        return ".txt files";
+    }
+    
 }
