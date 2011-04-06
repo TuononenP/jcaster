@@ -42,8 +42,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
@@ -196,19 +194,6 @@ public class JcasterGUI {
 			}
 		});
 		
-//		btnBrowse.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				browseActionPerformed(e);
-//			}
-//		});
-		
-//		btnBrowse.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				browseActionPerformed();
-//			}
-//		});
-		
 		//add mmnemonics
 		btnRecord.setMnemonic(KeyEvent.VK_R);
 		btnPause.setMnemonic(KeyEvent.VK_P);
@@ -265,6 +250,11 @@ public class JcasterGUI {
 		saveLocTextField.setColumns(10);
 		
 		btnBrowse = new JButton("Browse...");
+		btnBrowse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				browseActionPerformed(e);
+			}
+		});
 		GridBagConstraints gbc_btnBrowse = new GridBagConstraints();
 		gbc_btnBrowse.insets = new Insets(0, 0, 5, 5);
 		gbc_btnBrowse.gridx = 2;
@@ -396,6 +386,9 @@ public class JcasterGUI {
     	record = new Record(settings);
     }
     
+    /**
+     * Setup recording process with stop watch.
+     */
     private void setupTimedRecording() {
     	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, filenameTextField.getName(), getSelectedExtensionRadioButtonName(), saveLocTextField.getText(), 10000);
     	record = new Record(settings);
@@ -443,49 +436,23 @@ public class JcasterGUI {
     			"No warranties of any kind.");
     }
 
-    private void chooseFileSaveLocation(ActionEvent e) {
-    	File file = null;
-    	final JFileChooser fc = new JFileChooser();
-    	int result = fc.showSaveDialog(frmJcaster);
-    	switch (result) { 
-    	case JFileChooser.APPROVE_OPTION : 
-    		if (fc.getSelectedFile() != null) { // A file was selected
-    			file = fc.getSelectedFile();
-        		try {
-        			//display in textfield
-        			saveLocTextField.read(new FileReader(file.getAbsolutePath()), null );
-        		} catch (IOException ex) {
-        			System.out.println("problem accessing file"+file.getAbsolutePath());
-        		}
-    		}
-    		else { // No file selected 
-    			JOptionPane.showMessageDialog(frmJcaster, "No file was selected", "File selection info", JOptionPane.INFORMATION_MESSAGE);
-    		}
-    		break ; 
-    	case JFileChooser.CANCEL_OPTION : // Selection canceled
-    		break ; 
-    	case JFileChooser.ERROR_OPTION : // An error has occurred 
-    		JOptionPane.showMessageDialog(frmJcaster, "An error occured while selecting a file to save", "File selection error", JOptionPane.ERROR_MESSAGE);
-    		break ; 
-    	} 
-    }
-
     /**
      * Action for browse button.
      * 
      * @param e ActionEvent
      */
-    private void browseActionPerformed() {
-    	JFileChooser fc = new JFileChooser();
-    	int returnVal = fc.showOpenDialog(frmJcaster);
+    private void browseActionPerformed(ActionEvent e) {
+    	JFileChooser chooser = new JFileChooser();
+    	chooser.setCurrentDirectory(new java.io.File("."));
+    	chooser.setDialogTitle("Choose directory");
+    	chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    	chooser.setAcceptAllFileFilterUsed(false);
+
+    	int returnVal = chooser.showOpenDialog(frmJcaster);
     	if (returnVal == JFileChooser.APPROVE_OPTION) {
-    		File file = fc.getSelectedFile();
-    		try {
+    		File file = chooser.getSelectedFile();
     			//display in textfield
-    			saveLocTextField.read(new FileReader(file.getAbsolutePath()), null );
-    		} catch (IOException ex) {
-    			System.out.println("problem accessing file"+file.getAbsolutePath());
-    		}
+    			saveLocTextField.setText(file.getAbsolutePath());
     	} else {
     		System.out.println("File access cancelled by user.");
     	}
