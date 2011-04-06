@@ -19,6 +19,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -32,6 +35,9 @@ import configurations.CaptureSettings;
 
 import recording.Record;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -39,6 +45,9 @@ public class JcasterGUI {
 
 	private JFrame frmJcaster;
 	private static Record record;
+	private JButton btnRecord;
+	private JButton btnPause;
+	private JButton btnStop;
 
 	/**
 	 * Launch the application.
@@ -95,9 +104,12 @@ public class JcasterGUI {
 		gbl_panel_3.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		panel_3.setLayout(gbl_panel_3);
 		
-		final JButton btnRecord = new JButton("Record");
-		final JButton btnStop = new JButton("Stop");
-		final JButton btnPause = new JButton("Pause");
+		btnRecord = new JButton("Record");
+		btnPause = new JButton("Pause");
+		btnStop = new JButton("Stop");
+		
+		btnStop.setEnabled(false);
+		btnPause.setEnabled(false);
 		
 		GridBagConstraints gbc_btnRecord = new GridBagConstraints();
 		gbc_btnRecord.anchor = GridBagConstraints.WEST;
@@ -122,14 +134,15 @@ public class JcasterGUI {
 		gbc_btnStop.gridy = 0;
 		panel_3.add(btnStop, gbc_btnStop);
 		
+		//add mouse listeners
 		btnRecord.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				btnRecord.setEnabled(false);
-				btnStop.setEnabled(true);
-				btnPause.setEnabled(true);
 				//start recording
 				record.startRecording();
+				btnRecord.setEnabled(false);
+				btnStop.setEnabled(true);
+//				btnPause.setEnabled(true); TODO: implement pause action
 			}
 		});
 		
@@ -143,14 +156,18 @@ public class JcasterGUI {
 		btnStop.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				btnStop.setEnabled(false);
-				btnPause.setEnabled(false);
-				btnRecord.setEnabled(true);
-				btnRecord.setEnabled(true);
 				//stop recording
 				record.stopRecording();
+				btnStop.setEnabled(false);
+//				btnPause.setEnabled(false); TODO: implement pause action
+				btnRecord.setEnabled(true);
 			}
 		});
+		
+		//add mmnemonics
+		btnRecord.setMnemonic(KeyEvent.VK_R);
+		btnPause.setMnemonic(KeyEvent.VK_P);
+		btnStop.setMnemonic(KeyEvent.VK_S);
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		GridBagConstraints gbc_tabbedPane = new GridBagConstraints();
@@ -205,25 +222,19 @@ public class JcasterGUI {
 		JMenu mnNewMenu = new JMenu("File");
 		menuBar.add(mnNewMenu);
 		
-		JMenuItem mntmRecord = new JMenuItem("Record");
-		mnNewMenu.add(mntmRecord);
-		
-		JMenuItem mntmStop = new JMenuItem("Stop");
-		mnNewMenu.add(mntmStop);
-		
-		JMenuItem mntmPause = new JMenuItem("Pause");
-		mnNewMenu.add(mntmPause);
-		
 		JMenuItem mntmExit = new JMenuItem("Exit");
+		mntmExit.setMnemonic(KeyEvent.VK_Q);
 		mnNewMenu.add(mntmExit);
 		
 		JMenu mnHelp = new JMenu("Help");
 		menuBar.add(mnHelp);
 		
 		JMenuItem mntmHelp = new JMenuItem("Help");
+		mntmHelp.setMnemonic(KeyEvent.VK_F11);
 		mnHelp.add(mntmHelp);
 		
 		JMenuItem mntmAbout = new JMenuItem("About");
+		mntmHelp.setMnemonic(KeyEvent.VK_A);
 		mnHelp.add(mntmAbout);
 	}
 	
