@@ -73,7 +73,6 @@ public class CaptureSettings {
     	setOutputDirPath(outputDirPath);
     	setFileName(fileName);
     	setFileType(fileType);
-    	setCaptureDuration(10000);
 	}
 	
 	public String getAudioVideoType() {
