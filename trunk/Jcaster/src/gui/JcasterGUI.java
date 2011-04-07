@@ -42,11 +42,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.TimerTask;
+import java.util.Timer;
 
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 
 import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
+import java.awt.GridLayout;
 
 public class JcasterGUI {
 
@@ -66,6 +69,8 @@ public class JcasterGUI {
 	private ButtonGroup extensionBtngroup;
 	private ButtonGroup audioVideoTypeBtnGroup;
 	private CaptureSettings settings;
+	private JTextField txtCountdown;
+	private JTextField txtRecordDuration;
 
 	/**
 	 * Launch the application.
@@ -115,12 +120,6 @@ public class JcasterGUI {
 		gbc_panel_3.gridx = 0;
 		gbc_panel_3.gridy = 0;
 		frmJcaster.getContentPane().add(panel_3, gbc_panel_3);
-		GridBagLayout gbl_panel_3 = new GridBagLayout();
-		gbl_panel_3.columnWidths = new int[]{0, 0, 0, 0};
-		gbl_panel_3.rowHeights = new int[]{0, 0};
-		gbl_panel_3.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_3.rowWeights = new double[]{1.0, Double.MIN_VALUE};
-		panel_3.setLayout(gbl_panel_3);
 		
 		btnRecord = new JButton("Record");
 		btnPause = new JButton("Pause");
@@ -128,69 +127,27 @@ public class JcasterGUI {
 		
 		btnStop.setEnabled(false);
 		btnPause.setEnabled(false);
+		panel_3.setLayout(new GridLayout(0, 3, 0, 0));
+		panel_3.add(btnRecord);
+		panel_3.add(btnPause);
+		panel_3.add(btnStop);
 		
-		GridBagConstraints gbc_btnRecord = new GridBagConstraints();
-		gbc_btnRecord.anchor = GridBagConstraints.WEST;
-		gbc_btnRecord.fill = GridBagConstraints.VERTICAL;
-		gbc_btnRecord.insets = new Insets(0, 0, 0, 5);
-		gbc_btnRecord.gridx = 0;
-		gbc_btnRecord.gridy = 0;
-		panel_3.add(btnRecord, gbc_btnRecord);
-		
-		GridBagConstraints gbc_btnPause = new GridBagConstraints();
-		gbc_btnPause.anchor = GridBagConstraints.WEST;
-		gbc_btnPause.fill = GridBagConstraints.VERTICAL;
-		gbc_btnPause.insets = new Insets(0, 0, 0, 5);
-		gbc_btnPause.gridx = 1;
-		gbc_btnPause.gridy = 0;
-		panel_3.add(btnPause, gbc_btnPause);
-		
-		GridBagConstraints gbc_btnStop = new GridBagConstraints();
-		gbc_btnStop.anchor = GridBagConstraints.WEST;
-		gbc_btnStop.fill = GridBagConstraints.VERTICAL;
-		gbc_btnStop.gridx = 2;
-		gbc_btnStop.gridy = 0;
-		panel_3.add(btnStop, gbc_btnStop);
-		
-		//add mouse listeners
-		btnRecord.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				//setup recording settings
-				try {
-					setupRecording();
-				} catch (Exception e2) {
-					System.out.println("Error when trying to setup recording.");
-				}
-				
-				//start recording
-				try {
-					record.startRecording();
-					//TODO: Mimimize frame to taskbar
-				} catch (Exception e2) {
-					System.out.println("Capture settings must be configured.");
-				}
-				btnRecord.setEnabled(false);
-				btnStop.setEnabled(true);
-//				btnPause.setEnabled(true); TODO: implement pause action
+		btnRecord.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				record();
 			}
 		});
 		
 		btnPause.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				//TODO: Implement pause button action listener
 			}
 		});
 		
-		btnStop.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				//stop recording
-				record.stopRecording();
-				btnStop.setEnabled(false);
-//				btnPause.setEnabled(false); TODO: implement pause action
-				btnRecord.setEnabled(true);
+		btnStop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				stop();
 			}
 		});
 		
@@ -210,9 +167,9 @@ public class JcasterGUI {
 		tabbedPane.addTab("General settings", null, panel_2, null);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
 		gbl_panel_2.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_panel_2.rowHeights = new int[]{0, 20, 0, 0, 0};
+		gbl_panel_2.rowHeights = new int[]{0, 20, 0, 0, 0, 0, 0};
 		gbl_panel_2.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_2.setLayout(gbl_panel_2);
 		
 		JLabel lblFilename = new JLabel("Filename");
@@ -242,6 +199,7 @@ public class JcasterGUI {
 		
 		saveLocTextField = new JTextField(CaptureSettings.getDefaultOutputDirPath());
 		GridBagConstraints gbc_saveLocTextField = new GridBagConstraints();
+		gbc_saveLocTextField.gridwidth = 2;
 		gbc_saveLocTextField.insets = new Insets(0, 0, 5, 5);
 		gbc_saveLocTextField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_saveLocTextField.gridx = 1;
@@ -252,18 +210,19 @@ public class JcasterGUI {
 		btnBrowse = new JButton("Browse...");
 		btnBrowse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				browseActionPerformed(e);
+				browseActionPerformed();
 			}
 		});
 		GridBagConstraints gbc_btnBrowse = new GridBagConstraints();
-		gbc_btnBrowse.insets = new Insets(0, 0, 5, 5);
-		gbc_btnBrowse.gridx = 2;
+		gbc_btnBrowse.anchor = GridBagConstraints.WEST;
+		gbc_btnBrowse.insets = new Insets(0, 0, 5, 0);
+		gbc_btnBrowse.gridx = 3;
 		gbc_btnBrowse.gridy = 2;
 		panel_2.add(btnBrowse, gbc_btnBrowse);
 		
 		rdbtnAudiovideo = new JRadioButton("audio+video");
 		GridBagConstraints gbc_rdbtnAudiovideo = new GridBagConstraints();
-		gbc_rdbtnAudiovideo.insets = new Insets(0, 0, 0, 5);
+		gbc_rdbtnAudiovideo.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnAudiovideo.gridx = 0;
 		gbc_rdbtnAudiovideo.gridy = 3;
 		panel_2.add(rdbtnAudiovideo, gbc_rdbtnAudiovideo);
@@ -271,14 +230,14 @@ public class JcasterGUI {
 		
 		rdbtnVideoOnly = new JRadioButton("video only");
 		GridBagConstraints gbc_rdbtnVideoOnly = new GridBagConstraints();
-		gbc_rdbtnVideoOnly.insets = new Insets(0, 0, 0, 5);
+		gbc_rdbtnVideoOnly.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnVideoOnly.gridx = 1;
 		gbc_rdbtnVideoOnly.gridy = 3;
 		panel_2.add(rdbtnVideoOnly, gbc_rdbtnVideoOnly);
 		
 		rdbtnAudioOnly = new JRadioButton("audio only");
 		GridBagConstraints gbc_rdbtnAudioOnly = new GridBagConstraints();
-		gbc_rdbtnAudioOnly.insets = new Insets(0, 0, 0, 5);
+		gbc_rdbtnAudioOnly.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnAudioOnly.gridx = 2;
 		gbc_rdbtnAudioOnly.gridy = 3;
 		panel_2.add(rdbtnAudioOnly, gbc_rdbtnAudioOnly);
@@ -287,6 +246,60 @@ public class JcasterGUI {
 		audioVideoTypeBtnGroup.add(rdbtnAudiovideo);
 		audioVideoTypeBtnGroup.add(rdbtnVideoOnly);
 		audioVideoTypeBtnGroup.add(rdbtnAudioOnly);
+		
+		JLabel lblRecordingCountdown = new JLabel("Recording countdown");
+		GridBagConstraints gbc_lblRecordingCountdown = new GridBagConstraints();
+		gbc_lblRecordingCountdown.anchor = GridBagConstraints.EAST;
+		gbc_lblRecordingCountdown.insets = new Insets(0, 0, 5, 5);
+		gbc_lblRecordingCountdown.gridx = 0;
+		gbc_lblRecordingCountdown.gridy = 4;
+		panel_2.add(lblRecordingCountdown, gbc_lblRecordingCountdown);
+		
+		txtCountdown = new JTextField();
+		txtCountdown.setToolTipText("Countdown before recording starts");
+		txtCountdown.setText("0");
+		GridBagConstraints gbc_txtCountdown = new GridBagConstraints();
+		gbc_txtCountdown.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtCountdown.insets = new Insets(0, 0, 5, 5);
+		gbc_txtCountdown.gridx = 1;
+		gbc_txtCountdown.gridy = 4;
+		panel_2.add(txtCountdown, gbc_txtCountdown);
+		txtCountdown.setColumns(5);
+		
+		JLabel lblNewLabel = new JLabel("record starts when countdown hits 0");
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
+		gbc_lblNewLabel.gridwidth = 2;
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNewLabel.gridx = 2;
+		gbc_lblNewLabel.gridy = 4;
+		panel_2.add(lblNewLabel, gbc_lblNewLabel);
+		
+		JLabel lblDurationOfRecord = new JLabel("Duration of record");
+		GridBagConstraints gbc_lblDurationOfRecord = new GridBagConstraints();
+		gbc_lblDurationOfRecord.anchor = GridBagConstraints.EAST;
+		gbc_lblDurationOfRecord.insets = new Insets(0, 0, 0, 5);
+		gbc_lblDurationOfRecord.gridx = 0;
+		gbc_lblDurationOfRecord.gridy = 5;
+		panel_2.add(lblDurationOfRecord, gbc_lblDurationOfRecord);
+		
+		txtRecordDuration = new JTextField();
+		txtRecordDuration.setText("0");
+		GridBagConstraints gbc_txtRecordDuration = new GridBagConstraints();
+		gbc_txtRecordDuration.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtRecordDuration.insets = new Insets(0, 0, 0, 5);
+		gbc_txtRecordDuration.gridx = 1;
+		gbc_txtRecordDuration.gridy = 5;
+		panel_2.add(txtRecordDuration, gbc_txtRecordDuration);
+		txtRecordDuration.setColumns(5);
+		
+		JLabel lbluntilStopButton = new JLabel("0 = records until stop button is pressed");
+		GridBagConstraints gbc_lbluntilStopButton = new GridBagConstraints();
+		gbc_lbluntilStopButton.anchor = GridBagConstraints.WEST;
+		gbc_lbluntilStopButton.gridwidth = 2;
+		gbc_lbluntilStopButton.gridx = 2;
+		gbc_lbluntilStopButton.gridy = 5;
+		panel_2.add(lbluntilStopButton, gbc_lbluntilStopButton);
 		
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Video settings", null, panel, null);
@@ -356,7 +369,7 @@ public class JcasterGUI {
 		mnHelp.add(mntmHelp);
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showHelpActionPerformed(e);
+				showHelpActionPerformed();
 			}
 		});
 		
@@ -375,22 +388,20 @@ public class JcasterGUI {
      * Setup recording process.
      */
     private void setupRecording() {
+		int captureDuration = 0;
+		int time = Integer.parseInt(txtRecordDuration.getText()); //time in ms
+		//check if timed recording is set
+		if(time > 0) {
+			captureDuration = time*1000; //time in seconds
+		}
     	String selectedAudioVideoType = getSelectedAudioVideoTypeRadioButtonName();
     	if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
-    		settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName());
+    		settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
     	} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.VIDEO)) {
-    		settings = new CaptureSettings(AudioVideoTypes.VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName());
+    		settings = new CaptureSettings(AudioVideoTypes.VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
     	} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
-    		settings = new CaptureSettings(AudioVideoTypes.AUDIO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName());
+    		settings = new CaptureSettings(AudioVideoTypes.AUDIO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
     	}
-    	record = new Record(settings);
-    }
-    
-    /**
-     * Setup recording process with stop watch.
-     */
-    private void setupTimedRecording() {
-    	settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, filenameTextField.getName(), getSelectedExtensionRadioButtonName(), saveLocTextField.getText(), 10000);
     	record = new Record(settings);
     }
     
@@ -439,9 +450,8 @@ public class JcasterGUI {
     /**
      * Action for browse button.
      * 
-     * @param e ActionEvent
      */
-    private void browseActionPerformed(ActionEvent e) {
+    private void browseActionPerformed() {
     	JFileChooser chooser = new JFileChooser();
     	chooser.setCurrentDirectory(new java.io.File("."));
     	chooser.setDialogTitle("Choose directory");
@@ -459,7 +469,96 @@ public class JcasterGUI {
     } 
     
     /**
-     * Action for Exit menuitem.
+     * Record.
+     * 
+     */
+    private void record() {
+    	//setup recording settings
+    	try {
+    		setupRecording();
+    	} catch (Exception e2) {
+    		System.out.println("Error when trying to setup recording.");
+    	}
+    	final int duration = settings.getCaptureDuration();
+    	//if countdown enabled
+    	int countdown = Integer.parseInt(txtCountdown.getText()); //time in ms
+    	if (countdown>0) {
+    		btnRecord.setEnabled(false);
+    		countdown *= 1000; //time in seconds
+    		(new Timer()).schedule(new TimerTask(){
+    			public void run(){
+    				//if timer is enabled
+    				if (duration>0) {
+    					record.startRecording();
+    					btnStop.setEnabled(true);
+    					//btnPause.setEnabled(true); //TODO: pause button action
+    					(new Timer()).schedule(new TimerTask() {
+    						public void run () {
+    							//stop recording
+    							try {
+    								record.stopRecording();
+    								btnRecord.setEnabled(true);
+    								btnStop.setEnabled(false);
+    								btnPause.setEnabled(false);
+    							} catch (Exception e) {
+    								System.out.println("Error when trying to stop recording.");
+    							}
+    						}
+    					}, duration);
+    				} else { //countdown, no timer
+    					//start recording
+    					try {
+    						record.startRecording();
+    						//stop and pause buttons come visible after countdown has run
+    						btnRecord.setEnabled(false);
+    						btnStop.setEnabled(true);
+    						//btnPause.setEnabled(true); TODO: implement pause action
+    						//TODO: Mimimize frame to taskbar
+    					} catch (Exception e2) {
+    						System.out.println("Capture settings must be configured.");
+    					}
+    				}
+    			}
+    		}, countdown);
+    	} else { // no countdown
+    		//if timer enabled
+    		if (duration>0) {
+    			record.startRecording();
+    			(new Timer()).schedule(new TimerTask() {
+    				public void run () {
+    					//stop recording
+    					try {
+    						record.stopRecording();
+    						btnStop.setEnabled(false);
+    						btnPause.setEnabled(false);
+    					} catch (Exception e) {
+    						System.out.println("Error when trying to stop recording.");
+    					}
+    				}
+    			}, duration);
+    		} else { //no countdown, no timer
+    			record.startRecording();
+    			btnRecord.setEnabled(false);
+    			btnStop.setEnabled(true);
+    			//btnPause.setEnabled(true); TODO: implement pause action
+    		}
+    	}
+    }
+    
+    /**
+     * Stop recording.
+     * 
+     */
+    private void stop() {
+		//stop recording
+		record.stopRecording();
+		btnStop.setEnabled(false);
+		btnPause.setEnabled(false);
+		btnRecord.setEnabled(true);
+    }
+    
+    /**
+     * Action for Exit menu item.
      * 
      * @param e ActionEvent
      */
@@ -470,9 +569,8 @@ public class JcasterGUI {
 	/**
      * 'Show help' menu item pressed.
      * 
-     * @param e ActionEvent
      */
-    private void showHelpActionPerformed(ActionEvent e) {
+    private void showHelpActionPerformed() {
             new Help().toFront();
     }
     
