@@ -22,6 +22,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Timer to count before recording starts.
@@ -29,11 +31,32 @@ import java.awt.Font;
  * @author Petri Tuononen
  *
  */
-public class Timer extends JFrame {
+public class Countdown extends JFrame {
 
+	//global variables
 	private static final long serialVersionUID = 252899392006111078L;
 	private JPanel contentPane;
-	JLabel label;
+	private JLabel label;
+	private int time;
+	private boolean toggle = true;
+
+	/**
+	 * Get time.
+	 * 
+	 * @return int
+	 */
+	public int getTime() {
+		return time;
+	}
+
+	/**
+	 * Set time.
+	 * 
+	 * @param time Time in seconds.
+	 */
+	public void setTime(int time) {
+		this.time = time;
+	}
 
 	/**
 	 * Get timer count value.
@@ -59,8 +82,7 @@ public class Timer extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Timer frame = new Timer();
-					frame.setVisible(true);
+					start();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -69,10 +91,45 @@ public class Timer extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Start to countdown.
 	 */
-	public Timer() {
+	public void start() {
+		setVisible(true);
+		final int time_s = Integer.parseInt((getLabel().getText()));
+		final int time_ms = time_s*1000;
+		int i = 0;
+		while (i<time_ms) { //TODO: FIX THIS
+			(new Timer()).schedule(new TimerTask() {
+				public void run () {
+					int newValue;
+					if (toggle==true) { //first run
+						//no need to change label
+						toggle=false;
+					} else {
+						newValue = Integer.parseInt((getLabel().getText()))-1;
+						getLabel().setText(Integer.toString(newValue));
+					}
+				}
+			}, i);
+			i += 1000;
+		}
+		(new Timer()).schedule(new TimerTask() {
+			public void run () {
+				//get rid of the frame when countdown reaches zero
+				setVisible(false);
+				dispose();
+			}
+		}, getTime());
+	}
+
+	/**
+	 * Create the frame.
+	 * 
+	 * @param time Time in seconds.
+	 */
+	public Countdown(int time) {
 		setResizable(false);
+		setAlwaysOnTop(true);
 		setTitle("Timer");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 163, 148);
@@ -84,10 +141,13 @@ public class Timer extends JFrame {
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
 
-		label = new JLabel("3");
+		label = new JLabel(Integer.toString(time/1000));
 		label.setFont(new Font("Swiss921 BT", Font.PLAIN, 70));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(label);
+		
+		setLocationRelativeTo(null); //center the frame
+		setTime(time);
 	}
 
 }
