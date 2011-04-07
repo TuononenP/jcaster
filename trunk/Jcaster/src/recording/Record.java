@@ -70,37 +70,53 @@ public class Record {
      * @param settings CaptureSettings
      */
     public void registerWriterToSourceGroup(SourceGroup sg, CaptureSettings settings) {
-    	if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
-    		//video with audio
-    		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
-    				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(), AudioVideoTypes.AUDIO_AND_VIDEO));
-    	} else if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
-    		//only audio
-    		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
-    				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.AUDIO));
-    	} else if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.VIDEO)) {
-    		//only video
-    		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
-    				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.VIDEO));
-    	}
+    	try {
+        	if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
+        		//video with audio
+        		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
+        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(), AudioVideoTypes.AUDIO_AND_VIDEO));
+        	} else if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
+        		//only audio
+        		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
+        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.AUDIO));
+        	} else if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.VIDEO)) {
+        		//only video
+        		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
+        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.VIDEO));
+        	}
+		} catch (Exception e) {
+			System.out.println("Failed to register writers to a source group.");
+		}
     }
 
     /**
      * Start recording process.
      */
     public void startRecording() {
-    	//setup processing
-    	SourceGroup.setupProcessingOnAllSources();
-    	//start processing
-    	SourceGroup.beginProcessingOnAllSources();
+    	try {
+    		//setup processing
+    		SourceGroup.setupProcessingOnAllSources();
+    	} catch (Exception e) {
+    		System.out.println("Error when trying to setup processes.");
+    	}
+    	try {
+    		//start processing
+    		SourceGroup.beginProcessingOnAllSources();
+    	} catch (Exception e) {
+    		System.out.println("Error when trying to begin processing.");
+    	}
     }
-    
+
     /**
      * Stop recording process.
      */
     public void stopRecording() {
-    	//stop process
-    	SourceGroup.stopProcessingOnAllSources();
+    	try {
+        	//stop process
+        	SourceGroup.stopProcessingOnAllSources();
+		} catch (Exception e) {
+			System.out.println("Error when trying to stop processes.");
+		}
     }
     
 }

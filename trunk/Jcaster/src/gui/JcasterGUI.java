@@ -396,20 +396,24 @@ public class JcasterGUI {
      */
     private void setupRecording() {
 		int captureDuration = 0;
-		int time = Integer.parseInt(txtRecordDuration.getText()); //time in ms
+		int time = getRecordDurationValue(); //time in seconds
 		//check if timed recording is set
 		if(time > 0) {
-			captureDuration = time*1000; //time in seconds
+			captureDuration = time*1000; //time in milliseconds
 		}
-    	String selectedAudioVideoType = getSelectedAudioVideoTypeRadioButtonName();
-    	if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
-    		settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
-    	} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.VIDEO)) {
-    		settings = new CaptureSettings(AudioVideoTypes.VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
-    	} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
-    		settings = new CaptureSettings(AudioVideoTypes.AUDIO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
-    	}
-    	record = new Record(settings);
+		try {
+			String selectedAudioVideoType = getSelectedAudioVideoTypeRadioButtonName();
+			if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
+				settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
+			} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.VIDEO)) {
+				settings = new CaptureSettings(AudioVideoTypes.VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
+			} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
+				settings = new CaptureSettings(AudioVideoTypes.AUDIO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
+			}
+			record = new Record(settings);
+		} catch (Exception e) {
+			System.out.println("Error when trying to configure recording settings.");
+		}
     }
     
     /**
@@ -481,17 +485,14 @@ public class JcasterGUI {
      */
     private void record() {
     	//setup recording settings
-    	try {
-    		setupRecording();
-    	} catch (Exception e2) {
-    		System.out.println("Error when trying to setup recording.");
-    	}
+    	setupRecording();
     	final int duration = settings.getCaptureDuration();
     	//if countdown enabled
-    	int countdown = Integer.parseInt(txtCountdown.getText()); //time in ms
+    	int countdown = getCountdownValue(); //time seconds
     	if (countdown>0) {
     		btnRecord.setEnabled(false);
-    		countdown *= 1000; //time in seconds
+    		countdown *= 1000; //time in milliseconds
+    		showCountdownTimer(countdown);
     		(new Timer()).schedule(new TimerTask(){
     			public void run(){
     				//if timer is enabled
@@ -502,45 +503,37 @@ public class JcasterGUI {
     					(new Timer()).schedule(new TimerTask() {
     						public void run () {
     							//stop recording
-    							try {
-    								record.stopRecording();
-    								btnRecord.setEnabled(true);
-    								btnStop.setEnabled(false);
-    								btnPause.setEnabled(false);
-    							} catch (Exception e) {
-    								System.out.println("Error when trying to stop recording.");
-    							}
+    							record.stopRecording();
+    							btnRecord.setEnabled(true);
+    							btnStop.setEnabled(false);
+    							btnPause.setEnabled(false);
     						}
     					}, duration);
     				} else { //countdown, no timer
     					//start recording
-    					try {
-    						record.startRecording();
-    						//stop and pause buttons come visible after countdown has run
-    						btnRecord.setEnabled(false);
-    						btnStop.setEnabled(true);
-    						//btnPause.setEnabled(true); TODO: implement pause action
-    						//TODO: Mimimize frame to taskbar
-    					} catch (Exception e2) {
-    						System.out.println("Capture settings must be configured.");
-    					}
+    					record.startRecording();
+    					//stop and pause buttons come visible after countdown has run
+    					btnRecord.setEnabled(false);
+    					btnStop.setEnabled(true);
+    					//btnPause.setEnabled(true); TODO: implement pause action
+    					//TODO: Mimimize frame to taskbar
     				}
     			}
-    		}, countdown);
+    		}, countdown+300); //add 0.3s offset for countdown frame to exit
     	} else { // no countdown
     		//if timer enabled
     		if (duration>0) {
     			record.startRecording();
+    			btnRecord.setEnabled(false);
+    			btnStop.setEnabled(true);
+    			//btnPause.setEnabled(true); TODO: implement pause action
     			(new Timer()).schedule(new TimerTask() {
     				public void run () {
     					//stop recording
-    					try {
-    						record.stopRecording();
-    						btnStop.setEnabled(false);
-    						btnPause.setEnabled(false);
-    					} catch (Exception e) {
-    						System.out.println("Error when trying to stop recording.");
-    					}
+    					record.stopRecording();
+    					btnRecord.setEnabled(true);
+    					btnStop.setEnabled(false);
+    					btnPause.setEnabled(false);
     				}
     			}, duration);
     		} else { //no countdown, no timer
@@ -579,6 +572,36 @@ public class JcasterGUI {
      */
     private void showHelpActionPerformed() {
             new Help().toFront();
+    }
+ 
+    /**
+     * Shows new frame with backward counting numbers.
+     * 
+     * @param time time in seconds
+     */
+    private void showCountdownTimer(int time) {
+    	Countdown cd = new Countdown(time);
+    	cd.launch();
+    }
+    
+    /**
+     * Get integer value of the countdown textfield.
+     * Drop decimal part.
+     * 
+     * @return int Countdown value
+     */
+    private int getCountdownValue() {
+    	return (int) Double.parseDouble(txtCountdown.getText());
+    }
+    
+    /**
+     * Get integer part of the record duration textfield.
+     * Drop decimal part.
+     * 
+     * @return int record duration value
+     */
+    private int getRecordDurationValue() {
+    	return (int) Double.parseDouble(txtRecordDuration.getText());
     }
     
 }
