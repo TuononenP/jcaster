@@ -174,10 +174,18 @@ public class JcasterGUI {
 		tabbedPane.addTab("General settings", null, panel_2, null);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
 		gbl_panel_2.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gbl_panel_2.rowHeights = new int[]{0, 20, 0, 0, 0, 0, 0};
+		gbl_panel_2.rowHeights = new int[]{0, 20, 0, 0, 0, 0, 0, 0};
 		gbl_panel_2.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_2.setLayout(gbl_panel_2);
+		
+		JLabel lblNoteOnlyRecord = new JLabel("NOTE: ONLY RECORD ONE FILE AND RESTART IF NEED MORE (BUG)");
+		GridBagConstraints gbc_lblNoteOnlyRecord = new GridBagConstraints();
+		gbc_lblNoteOnlyRecord.gridwidth = 4;
+		gbc_lblNoteOnlyRecord.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNoteOnlyRecord.gridx = 0;
+		gbc_lblNoteOnlyRecord.gridy = 0;
+		panel_2.add(lblNoteOnlyRecord, gbc_lblNoteOnlyRecord);
 		
 		JLabel lblFilename = new JLabel("Filename");
 		GridBagConstraints gbc_lblFilename = new GridBagConstraints();
@@ -285,7 +293,7 @@ public class JcasterGUI {
 		JLabel lblDurationOfRecord = new JLabel("Duration of record");
 		GridBagConstraints gbc_lblDurationOfRecord = new GridBagConstraints();
 		gbc_lblDurationOfRecord.anchor = GridBagConstraints.EAST;
-		gbc_lblDurationOfRecord.insets = new Insets(0, 0, 0, 5);
+		gbc_lblDurationOfRecord.insets = new Insets(0, 0, 5, 5);
 		gbc_lblDurationOfRecord.gridx = 0;
 		gbc_lblDurationOfRecord.gridy = 5;
 		panel_2.add(lblDurationOfRecord, gbc_lblDurationOfRecord);
@@ -294,7 +302,7 @@ public class JcasterGUI {
 		txtRecordDuration.setText("0");
 		GridBagConstraints gbc_txtRecordDuration = new GridBagConstraints();
 		gbc_txtRecordDuration.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtRecordDuration.insets = new Insets(0, 0, 0, 5);
+		gbc_txtRecordDuration.insets = new Insets(0, 0, 5, 5);
 		gbc_txtRecordDuration.gridx = 1;
 		gbc_txtRecordDuration.gridy = 5;
 		panel_2.add(txtRecordDuration, gbc_txtRecordDuration);
@@ -302,6 +310,7 @@ public class JcasterGUI {
 		
 		JLabel lbluntilStopButton = new JLabel("0 = records until stop button is pressed");
 		GridBagConstraints gbc_lbluntilStopButton = new GridBagConstraints();
+		gbc_lbluntilStopButton.insets = new Insets(0, 0, 5, 0);
 		gbc_lbluntilStopButton.anchor = GridBagConstraints.WEST;
 		gbc_lbluntilStopButton.gridwidth = 2;
 		gbc_lbluntilStopButton.gridx = 2;

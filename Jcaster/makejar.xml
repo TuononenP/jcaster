@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Jcaster">
+    <!--ANT 1.7 is required-->
+    <target name="create_run_jar">
+        <jar destfile="C:/screencast2/Jcaster/dist/Jcaster.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="gui.JcasterGUI"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ commons-cli.jar logback-classic.jar logback-core.jar PacketMultibroadcaster.jar slf4j-api.jar xuggle-xuggler-test.jar xuggle-xuggler.jar miglayout15-swing.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="C:/screencast2/Jcaster/bin"/>
+            <zipfileset dir="C:\screencast2\Jcaster\lib" includes="commons-cli.jar"/>
+            <zipfileset dir="C:\screencast2\Jcaster\lib" includes="logback-classic.jar"/>
+            <zipfileset dir="C:\screencast2\Jcaster\lib" includes="logback-core.jar"/>
+            <zipfileset dir="C:\screencast2\Jcaster\lib" includes="PacketMultibroadcaster.jar"/>
+            <zipfileset dir="C:\screencast2\Jcaster\lib" includes="slf4j-api.jar"/>
+            <zipfileset dir="C:\screencast2\Jcaster\lib" includes="xuggle-xuggler-test.jar"/>
+            <zipfileset dir="C:\screencast2\Jcaster\lib" includes="xuggle-xuggler.jar"/>
+            <zipfileset dir="C:\screencast2\Jcaster" includes="miglayout15-swing.jar"/>
+        </jar>
+    </target>
+</project>
