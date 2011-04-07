@@ -51,8 +51,15 @@ import javax.swing.JRadioButton;
 import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 import java.awt.GridLayout;
 
+/**
+ * GUI for the screencasting software.
+ * 
+ * @author Petri Tuononen
+ *
+ */
 public class JcasterGUI {
 
+	//global variables
 	private JFrame frmJcaster;
 	private static Record record;
 	private JButton btnRecord;
