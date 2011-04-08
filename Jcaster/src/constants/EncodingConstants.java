@@ -14,6 +14,12 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package constants;
 
+/**
+ * Basic encoding constants.
+ * 
+ * @author Petri Tuononen
+ *
+ */
 public class EncodingConstants {
 	
     // Constants

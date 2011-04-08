@@ -32,7 +32,6 @@ import javax.swing.JButton;
 import java.awt.Insets;
 import javax.swing.JLabel;
 
-import configurations.AudioSettings;
 import configurations.CaptureSettings;
 
 import recording.Record;
@@ -691,30 +690,30 @@ public class JcasterGUI {
     	return (int) Double.parseDouble(txtRecordDuration.getText());
     }
     
-    /**
-     * Get audio settings.
-     * 
-     * @return AudioSettings
-     */
-    private AudioSettings getAudioSettings() {
-    	//get settings from the audio settings tab
-    	int channels = Integer.parseInt(txtAudiochannels.getText());
-    	int sampleSize = 0;
-    	if (rdbtnbit.isEnabled()) {
-    		sampleSize = Integer.parseInt(rdbtnbit.getText());
-    	} else if (rdbtnbit_1.isEnabled()) {
-    		sampleSize = Integer.parseInt(rdbtnbit_1.getText());
-    	}
-//    	int sampleRate = Integer.parseInt(spinner.getValue().toString()); //TODO: is this correct?
-    	int sampleRate = 44100; //TODO: remove
-    	
-//    	Object item = spinner.getValue();
-//    	if(item != null) {
-//    		String selectedString = item.toString();
-//    		sampleRate = Integer.parseInt(selectedString);
+//    /**
+//     * Get audio settings.
+//     * 
+//     * @return AudioSettings
+//     */
+//    private AudioSettings getAudioSettings() {
+//    	//get settings from the audio settings tab
+//    	int channels = Integer.parseInt(txtAudiochannels.getText());
+//    	int sampleSize = 0;
+//    	if (rdbtnbit.isEnabled()) {
+//    		sampleSize = Integer.parseInt(rdbtnbit.getText());
+//    	} else if (rdbtnbit_1.isEnabled()) {
+//    		sampleSize = Integer.parseInt(rdbtnbit_1.getText());
 //    	}
-    	
-    	return new AudioSettings(channels, sampleSize, sampleRate);
-    }
+////    	int sampleRate = Integer.parseInt(spinner.getValue().toString()); //TODO: is this correct?
+//    	int sampleRate = 44100; //TODO: remove
+//    	
+////    	Object item = spinner.getValue();
+////    	if(item != null) {
+////    		String selectedString = item.toString();
+////    		sampleRate = Integer.parseInt(selectedString);
+////    	}
+//    	
+//    	return new AudioSettings(channels, sampleSize, sampleRate);
+//    }
     
 }

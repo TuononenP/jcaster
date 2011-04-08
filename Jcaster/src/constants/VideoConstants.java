@@ -17,6 +17,12 @@ package constants;
 //  Native Java Classes
 import java.awt.Toolkit;
 
+/**
+ * Constants for video.
+ * 
+ * @author Petri Tuononen
+ *
+ */
 public class VideoConstants {
 	
     //  Constants
