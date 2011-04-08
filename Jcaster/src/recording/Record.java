@@ -21,6 +21,7 @@ import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 import com.cattura.packet_multibroadcaster.implementations.PacketMultibroadcaster;
 import com.cattura.packet_multibroadcaster.implementations.SourceGroup;
 
+import configurations.AudioSettings;
 import configurations.CaptureSettings;
 import constants.VideoConstants;
 import encode.Container;
@@ -35,10 +36,14 @@ import encode.Container;
  */
 public class Record {
 
+	//instance variables
+	private AudioSettings audioSettings;
+	
     /**
      * Constructor.
      */
-    public Record(CaptureSettings settings) {
+    public Record(CaptureSettings settings, AudioSettings audioSettings) {
+    	this.audioSettings = audioSettings;
         RobotVideoSource robotVideoSource = null;
         MicrophoneAudioSource microphoneAudioSource = null;
 
@@ -47,7 +52,7 @@ public class Record {
         	//video input from the screen
             robotVideoSource = new RobotVideoSource("RobotVideoSource", VideoConstants.SCREEN_WIDTH, VideoConstants.SCREEN_HEIGHT);
             //audio input from microphone
-            microphoneAudioSource = new MicrophoneAudioSource("MicrophoneAudioSource");
+            microphoneAudioSource = new MicrophoneAudioSource("MicrophoneAudioSource", audioSettings);
         }
         catch (Exception e) {
         	System.out.println("Couldn't create audio or video source(s).");
@@ -71,15 +76,15 @@ public class Record {
         	if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
         		//video with audio
         		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
-        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(), AudioVideoTypes.AUDIO_AND_VIDEO));
+        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(), AudioVideoTypes.AUDIO_AND_VIDEO, audioSettings));
         	} else if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
         		//only audio
         		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
-        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.AUDIO));
+        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.AUDIO, audioSettings));
         	} else if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.VIDEO)) {
         		//only video
         		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
-        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.VIDEO));
+        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.VIDEO, audioSettings));
         	}
 		} catch (Exception e) {
 			System.out.println("Failed to register writers to a source group.");

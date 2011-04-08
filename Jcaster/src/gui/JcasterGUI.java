@@ -32,6 +32,7 @@ import javax.swing.JButton;
 import java.awt.Insets;
 import javax.swing.JLabel;
 
+import configurations.AudioSettings;
 import configurations.CaptureSettings;
 
 import recording.Record;
@@ -50,6 +51,9 @@ import javax.swing.JRadioButton;
 
 import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 import java.awt.GridLayout;
+import javax.swing.JSlider;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerListModel;
 
 /**
  * GUI for the screencasting software.
@@ -68,16 +72,20 @@ public class JcasterGUI {
 	private JButton btnBrowse;
 	private JTextField saveLocTextField;
 	private JTextField filenameTextField;
-	private JRadioButton rdbtnMp = new JRadioButton();
-	private JRadioButton rdbtnMov = new JRadioButton();
-	private JRadioButton rdbtnAudiovideo = new JRadioButton();
-	private JRadioButton rdbtnVideoOnly = new JRadioButton();
-	private JRadioButton rdbtnAudioOnly = new JRadioButton();
+	private JRadioButton rdbtnMp;
+	private JRadioButton rdbtnMov;
+	private JRadioButton rdbtnAudiovideo;
+	private JRadioButton rdbtnVideoOnly;
+	private JRadioButton rdbtnAudioOnly;
+	private JRadioButton rdbtnbit;
+	private JRadioButton rdbtnbit_1;
 	private ButtonGroup extensionBtngroup;
 	private ButtonGroup audioVideoTypeBtnGroup;
-	private CaptureSettings settings;
 	private JTextField txtCountdown;
 	private JTextField txtRecordDuration;
+	private JTextField txtAudiochannels;
+	private JSpinner spinner;
+	private CaptureSettings settings;
 
 	/**
 	 * Launch the application.
@@ -356,11 +364,81 @@ public class JcasterGUI {
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Audio settings", null, panel_1, null);
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{0};
-		gbl_panel_1.rowHeights = new int[]{0};
-		gbl_panel_1.columnWeights = new double[]{Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{Double.MIN_VALUE};
+		gbl_panel_1.columnWidths = new int[]{0, 87, 116, 0, 0};
+		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0};
+		gbl_panel_1.columnWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
+		
+		JLabel lblChannels = new JLabel("Channels");
+		GridBagConstraints gbc_lblChannels = new GridBagConstraints();
+		gbc_lblChannels.insets = new Insets(0, 0, 5, 5);
+		gbc_lblChannels.anchor = GridBagConstraints.EAST;
+		gbc_lblChannels.gridx = 0;
+		gbc_lblChannels.gridy = 1;
+		panel_1.add(lblChannels, gbc_lblChannels);
+		
+		txtAudiochannels = new JTextField();
+		txtAudiochannels.setText("2");
+		GridBagConstraints gbc_txtAudiochannels = new GridBagConstraints();
+		gbc_txtAudiochannels.anchor = GridBagConstraints.WEST;
+		gbc_txtAudiochannels.insets = new Insets(0, 0, 5, 5);
+		gbc_txtAudiochannels.gridx = 1;
+		gbc_txtAudiochannels.gridy = 1;
+		panel_1.add(txtAudiochannels, gbc_txtAudiochannels);
+		txtAudiochannels.setColumns(10);
+		
+		JLabel lblMono = new JLabel("1 = mono, 2 = stereo");
+		GridBagConstraints gbc_lblMono = new GridBagConstraints();
+		gbc_lblMono.gridwidth = 2;
+		gbc_lblMono.insets = new Insets(0, 0, 5, 0);
+		gbc_lblMono.anchor = GridBagConstraints.WEST;
+		gbc_lblMono.gridx = 2;
+		gbc_lblMono.gridy = 1;
+		panel_1.add(lblMono, gbc_lblMono);
+		
+		JLabel lblSampleSize = new JLabel("Sample size");
+		GridBagConstraints gbc_lblSampleSize = new GridBagConstraints();
+		gbc_lblSampleSize.insets = new Insets(0, 0, 5, 5);
+		gbc_lblSampleSize.gridx = 0;
+		gbc_lblSampleSize.gridy = 2;
+		panel_1.add(lblSampleSize, gbc_lblSampleSize);
+		
+		rdbtnbit = new JRadioButton("8-bit");
+		GridBagConstraints gbc_rdbtnbit = new GridBagConstraints();
+		gbc_rdbtnbit.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnbit.gridx = 1;
+		gbc_rdbtnbit.gridy = 2;
+		panel_1.add(rdbtnbit, gbc_rdbtnbit);
+		
+		rdbtnbit_1 = new JRadioButton("16-bit");
+		rdbtnbit_1.setSelected(true);
+		GridBagConstraints gbc_rdbtnbit_1 = new GridBagConstraints();
+		gbc_rdbtnbit_1.anchor = GridBagConstraints.WEST;
+		gbc_rdbtnbit_1.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnbit_1.gridx = 2;
+		gbc_rdbtnbit_1.gridy = 2;
+		panel_1.add(rdbtnbit_1, gbc_rdbtnbit_1);
+		
+		ButtonGroup sampleSizeBtnGroup = new ButtonGroup();
+		sampleSizeBtnGroup.add(rdbtnbit);
+		sampleSizeBtnGroup.add(rdbtnbit_1);
+		
+		JLabel lblSampleRate = new JLabel("Sample rate");
+		GridBagConstraints gbc_lblSampleRate = new GridBagConstraints();
+		gbc_lblSampleRate.insets = new Insets(0, 0, 0, 5);
+		gbc_lblSampleRate.gridx = 0;
+		gbc_lblSampleRate.gridy = 3;
+		panel_1.add(lblSampleRate, gbc_lblSampleRate);
+		
+		spinner = new JSpinner();
+		spinner.setModel(new SpinnerListModel(new String[] {"44100", "22050", "16000", "11025", "8000"}));
+		GridBagConstraints gbc_spinner = new GridBagConstraints();
+		gbc_spinner.anchor = GridBagConstraints.WEST;
+		gbc_spinner.insets = new Insets(0, 0, 0, 5);
+		gbc_spinner.gridx = 1;
+		gbc_spinner.gridy = 3;
+		panel_1.add(spinner, gbc_spinner);
 		
 		JMenuBar menuBar = new JMenuBar();
 		frmJcaster.setJMenuBar(menuBar);
@@ -419,7 +497,7 @@ public class JcasterGUI {
 			} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
 				settings = new CaptureSettings(AudioVideoTypes.AUDIO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
 			}
-			record = new Record(settings);
+			record = new Record(settings, getAudioSettings());
 		} catch (Exception e) {
 			System.out.println("Error when trying to configure recording settings.");
 		}
@@ -611,6 +689,32 @@ public class JcasterGUI {
      */
     private int getRecordDurationValue() {
     	return (int) Double.parseDouble(txtRecordDuration.getText());
+    }
+    
+    /**
+     * Get audio settings.
+     * 
+     * @return AudioSettings
+     */
+    private AudioSettings getAudioSettings() {
+    	//get settings from the audio settings tab
+    	int channels = Integer.parseInt(txtAudiochannels.getText());
+    	int sampleSize = 0;
+    	if (rdbtnbit.isEnabled()) {
+    		sampleSize = Integer.parseInt(rdbtnbit.getText());
+    	} else if (rdbtnbit_1.isEnabled()) {
+    		sampleSize = Integer.parseInt(rdbtnbit_1.getText());
+    	}
+//    	int sampleRate = Integer.parseInt(spinner.getValue().toString()); //TODO: is this correct?
+    	int sampleRate = 44100; //TODO: remove
+    	
+//    	Object item = spinner.getValue();
+//    	if(item != null) {
+//    		String selectedString = item.toString();
+//    		sampleRate = Integer.parseInt(selectedString);
+//    	}
+    	
+    	return new AudioSettings(channels, sampleSize, sampleRate);
     }
     
 }
