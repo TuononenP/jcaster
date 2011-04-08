@@ -32,6 +32,7 @@ import javax.swing.JButton;
 import java.awt.Insets;
 import javax.swing.JLabel;
 
+import configurations.AudioSettings;
 import configurations.CaptureSettings;
 
 import recording.Record;

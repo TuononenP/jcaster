@@ -21,6 +21,7 @@ import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 import com.cattura.packet_multibroadcaster.implementations.PacketMultibroadcaster;
 import com.cattura.packet_multibroadcaster.implementations.SourceGroup;
 
+import configurations.AudioSettings;
 import configurations.CaptureSettings;
 import constants.VideoConstants;
 import encode.Container;

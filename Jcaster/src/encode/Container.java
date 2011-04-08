@@ -30,6 +30,7 @@ import com.xuggle.xuggler.IAudioSamples;
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.video.ConverterFactory;
 
+import configurations.AudioSettings;
 import constants.AudioConstants;
 import constants.EncodingConstants;
 import constants.VideoConstants;
@@ -59,7 +60,7 @@ public class Container extends Writer {
             audioBuffer.setType(IBuffer.Type.IBUFFER_SINT16);
 
             IAudioSamples audioSamples = IAudioSamples.make(audioBuffer, 1, IAudioSamples.Format.FMT_S16);
-            audioSamples.setComplete(true, audioBuffer.getSize(), AudioConstants.SAMPLE_RATE_AS_INT, AudioConstants.NUMBER_OF_CHANNELS, IAudioSamples.Format.FMT_S16, Global.NO_PTS);
+            audioSamples.setComplete(true, audioBuffer.getSize(), AudioSettings.getSampleRateAsInt(), AudioSettings.getNumberOfChannels(), IAudioSamples.Format.FMT_S16, Global.NO_PTS);
 
             _mediaWriter.encodeAudio(EncodingConstants.AUDIO_STREAM_ID, audioSamples);
         }
@@ -94,7 +95,7 @@ public class Container extends Writer {
         }
 
         if (getSupportsAudio()) {
-            _mediaWriter.addAudioStream(EncodingConstants.AUDIO_STREAM_ID, 0, ICodec.guessEncodingCodec(null, null, getOutputDirectory() + File.separator + getFilename() + "." + getExtension(), null, ICodec.Type.CODEC_TYPE_AUDIO), AudioConstants.NUMBER_OF_CHANNELS, AudioConstants.SAMPLE_RATE_AS_INT);
+            _mediaWriter.addAudioStream(EncodingConstants.AUDIO_STREAM_ID, 0, ICodec.guessEncodingCodec(null, null, getOutputDirectory() + File.separator + getFilename() + "." + getExtension(), null, ICodec.Type.CODEC_TYPE_AUDIO), AudioConstants.NUMBER_OF_CHANNELS, AudioSettings.getSampleRateAsInt());
         }
     }
 
