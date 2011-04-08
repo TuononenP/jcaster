@@ -27,22 +27,8 @@ public class CaptureSettings {
     private final static String defaultOutputDirPath =
     	System.getProperty("user.home") + File.separator + "Desktop" + File.separator;
     private String outputDirPath;
-    private int captureDuration = 10000;
+    private int captureDuration;
     
-    // Getters and Setters
-    
-    /**
-     * Default constructor.
-     * Captures video with audio.
-     */
-	public CaptureSettings() {
-    	setAudioVideoType(AudioVideoTypes.AUDIO_AND_VIDEO);
-    	setOutputDirPath(System.getProperty("user.home") + File.separator + "Desktop" + File.separator); //outputs to desktop
-    	setFileName("test");
-    	setFileType("mp4");
-    	setCaptureDuration(10000);
-	}
-
 	/**
 	 * Specific capture settings for timed recording.
 	 * 

@@ -98,7 +98,7 @@ public class Countdown extends JFrame {
 		final int time_s = Integer.parseInt((getLabel().getText()));
 		final int time_ms = time_s*1000;
 		int i = 0;
-		while (i<time_ms) { //TODO: FIX THIS
+		while (i<time_ms) {
 			(new Timer()).schedule(new TimerTask() {
 				public void run () {
 					int newValue;

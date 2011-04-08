@@ -14,9 +14,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package recording;
 
-//import java.util.Timer;
-//import java.util.TimerTask;
-
 import video.RobotVideoSource;
 import audio.MicrophoneAudioSource;
 
@@ -57,7 +54,7 @@ public class Record {
         }
         
         //create a source group
-        final SourceGroup sourceGroup = PacketMultibroadcaster.makeSourceGroup(robotVideoSource, microphoneAudioSource);
+        SourceGroup sourceGroup = PacketMultibroadcaster.makeSourceGroup(robotVideoSource, microphoneAudioSource);
 
         //register Writer to SourceGroup
         registerWriterToSourceGroup(sourceGroup, settings);
@@ -101,7 +98,7 @@ public class Record {
     	}
     	try {
     		//start processing
-    		SourceGroup.beginProcessingOnAllSources();
+    		SourceGroup.beginProcessingOnAllSources(); //TODO: Error happens at this points when debugging second video capture
     	} catch (Exception e) {
     		System.out.println("Error when trying to begin processing.");
     	}
