@@ -43,8 +43,8 @@ public class MicrophoneAudioSource extends Source {
 		TEMP_BUFFER = new byte[AudioConstants.TARGET_DATA_LINE_BYTE_SIZE];
 
 		try {
-			_targetDataLine = (TargetDataLine)AudioSystem.getLine(new DataLine.Info(TargetDataLine.class, AudioConstants.CATTURA_CONFIGURED_AUDIO_FORMAT));
-			_targetDataLine.open(AudioConstants.CATTURA_CONFIGURED_AUDIO_FORMAT);
+			_targetDataLine = (TargetDataLine)AudioSystem.getLine(new DataLine.Info(TargetDataLine.class, AudioConstants.configuredAudioFormat));
+			_targetDataLine.open(AudioConstants.configuredAudioFormat);
 			_targetDataLine.start();
 		}
 		catch (LineUnavailableException $ignore) {

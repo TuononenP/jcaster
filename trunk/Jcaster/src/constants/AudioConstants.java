@@ -14,19 +14,27 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package constants;
 
-//  Native Java Classes
 import javax.sound.sampled.AudioFormat;
 
+/**
+ * Constants for Audio.
+ * 
+ * @author Petri Tuononen
+ *
+ */
 public class AudioConstants {
 	
     // Constants
     public static final int TARGET_DATA_LINE_BYTE_SIZE = 50000;                 //  Size of the buffer that is transfered between the Microphone input and the Xuggler IAudioSamples
 	public static final float SAMPLE_RATE = 44100.0F;                           //  8000, 11025, 16000, 22050, 44100 in Hz
-	public static final int SAMPLE_RATE_AS_INT = (int)SAMPLE_RATE;              //  8000, 11025, 16000, 22050, 44100 in Hz
+	public static final int SAMPLE_RATE_AS_INT = (int)SAMPLE_RATE;              				//  8000, 11025, 16000, 22050, 44100 in Hz
 	public static final int SAMPLE_SIZE_IN_BITS = 16;                           //  8, 16
-	public static final int NUMBER_OF_CHANNELS = 1;                             //  1, 2
+	public static final int NUMBER_OF_CHANNELS = 2;                             //  1, 2
 	public static final boolean SIGNED = true;                                  //  true, false
 	public static final boolean BIG_ENDIAN = false;                             //  true, false
-    public static final AudioFormat CATTURA_CONFIGURED_AUDIO_FORMAT = new AudioFormat(AudioConstants.SAMPLE_RATE, AudioConstants.SAMPLE_SIZE_IN_BITS, AudioConstants.NUMBER_OF_CHANNELS, AudioConstants.SIGNED, AudioConstants.BIG_ENDIAN);
 
+	public static AudioFormat configuredAudioFormat = new AudioFormat(AudioConstants.SAMPLE_RATE,
+			SAMPLE_SIZE_IN_BITS, NUMBER_OF_CHANNELS, AudioConstants.SIGNED,
+    		AudioConstants.BIG_ENDIAN);
+	
 }
