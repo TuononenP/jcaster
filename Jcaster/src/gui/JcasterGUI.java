@@ -73,7 +73,9 @@ public class JcasterGUI {
 	private JTextField saveLocTextField;
 	private JTextField filenameTextField;
 	private JRadioButton rdbtnMp;
+	private JRadioButton rdbtnAvi;
 	private JRadioButton rdbtnMov;
+	private JRadioButton rdbtnFlv;
 	private JRadioButton rdbtnAudiovideo;
 	private JRadioButton rdbtnVideoOnly;
 	private JRadioButton rdbtnAudioOnly;
@@ -328,9 +330,9 @@ public class JcasterGUI {
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Video settings", null, panel, null);
 		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 0, 0, 0};
+		gbl_panel.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
 		gbl_panel.rowHeights = new int[]{20, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
@@ -349,17 +351,36 @@ public class JcasterGUI {
 		panel.add(rdbtnMp, gbc_rdbtnMp);
 		//set selected by default
 		rdbtnMp.setSelected(true);
-		
-		rdbtnMov = new JRadioButton("mov");
-		GridBagConstraints gbc_rdbtnMov = new GridBagConstraints();
-		gbc_rdbtnMov.gridx = 2;
-		gbc_rdbtnMov.gridy = 1;
-		panel.add(rdbtnMov, gbc_rdbtnMov);
-		
+	    
+	    rdbtnAvi = new JRadioButton("avi");
+	    GridBagConstraints gbc_rdbtnAvi = new GridBagConstraints();
+	    gbc_rdbtnAvi.insets = new Insets(0, 0, 0, 5);
+	    gbc_rdbtnAvi.gridx = 2;
+	    gbc_rdbtnAvi.gridy = 1;
+	    panel.add(rdbtnAvi, gbc_rdbtnAvi);
+	    rdbtnAvi.setEnabled(false); //TODO: make avi extension working
+
+	    rdbtnMov = new JRadioButton("mov");
+	    GridBagConstraints gbc_rdbtnMov = new GridBagConstraints();
+	    gbc_rdbtnMov.insets = new Insets(0, 0, 0, 5);
+	    gbc_rdbtnMov.gridx = 3;
+	    gbc_rdbtnMov.gridy = 1;
+	    panel.add(rdbtnMov, gbc_rdbtnMov);
+
+	    rdbtnFlv = new JRadioButton("flv");
+	    GridBagConstraints gbc_rdbtnFlv = new GridBagConstraints();
+	    gbc_rdbtnFlv.insets = new Insets(0, 0, 0, 5);
+	    gbc_rdbtnFlv.gridx = 4;
+	    gbc_rdbtnFlv.gridy = 1;
+	    panel.add(rdbtnFlv, gbc_rdbtnFlv);
+	    rdbtnFlv.setEnabled(false); //TODO: make flv extension working
+	    
 		//Group the radio buttons.
 	    extensionBtngroup = new ButtonGroup();
 	    extensionBtngroup.add(rdbtnMp);
+	    extensionBtngroup.add(rdbtnAvi);
 	    extensionBtngroup.add(rdbtnMov);
+	    extensionBtngroup.add(rdbtnFlv);
 	    
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Audio settings", null, panel_1, null);
@@ -511,8 +532,12 @@ public class JcasterGUI {
     private String getSelectedExtensionRadioButtonName() {
     	if(rdbtnMp.isSelected()) {
     		return rdbtnMp.getText();
+    	}else if(rdbtnAvi.isSelected()) {
+    		return rdbtnAvi.getText();
     	} else if(rdbtnMov.isSelected()) {
     		return rdbtnMov.getText();
+    	} else if(rdbtnFlv.isSelected()) {
+    		return rdbtnFlv.getText();
     	}
     	return null;
     }
