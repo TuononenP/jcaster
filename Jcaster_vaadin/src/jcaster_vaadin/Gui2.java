@@ -14,6 +14,7 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package jcaster_vaadin;
 
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -329,6 +330,7 @@ public class Gui2 extends CustomComponent {
 		txtSvLc.setWidth("-1px");
 		txtSvLc.setHeight("-1px");
 		txtSvLc.setImmediate(false);
+		txtSvLc.setValue(System.getProperty("user.home") + File.separator);
 		gridLayout_3.addComponent(txtSvLc, 1, 2);
 		
 		// brwBtn
