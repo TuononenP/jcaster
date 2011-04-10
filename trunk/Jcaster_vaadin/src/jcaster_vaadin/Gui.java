@@ -98,7 +98,6 @@ public class Gui extends CustomComponent {
 		menuBar_1.setImmediate(false);
 		MenuBar.MenuItem fileMenu =
 			menuBar_1.addItem("File", null, null);
-		fileMenu.addItem("Exit", null, null);
 		MenuBar.MenuItem helpMenu =
 			menuBar_1.addItem("Help", null, null);
 		helpMenu.addItem("Help", null, null);
