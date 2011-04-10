@@ -1,3 +1,5 @@
-#Sat Apr 09 21:17:25 KST 2011
+#Sun Apr 10 16:39:53 KST 2011
 com.vaadin.integration.eclipse.widgetsetDirty=false
+com.vaadin.integration.eclipse.widgetsetParallelism=8
+com.vaadin.integration.eclipse.widgetsetStyle=OBF
 eclipse.preferences.version=1

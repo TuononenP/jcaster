@@ -10,7 +10,7 @@ public class Jcaster_vaadinApplication extends Application {
 	@Override
 	public void init() {
 		Window mainWindow = new Window("Jcaster");
-		mainWindow.addComponent(new Gui());
+		mainWindow.addComponent(new Gui2());
 		setMainWindow(mainWindow);
 	}
 
