@@ -29,6 +29,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JButton;
+import javax.swing.SpinnerNumberModel;
+
 import java.awt.Insets;
 import javax.swing.JLabel;
 
@@ -51,7 +53,6 @@ import javax.swing.JRadioButton;
 
 import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 import java.awt.GridLayout;
-import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerListModel;
 
@@ -503,6 +504,9 @@ public class JcasterGUI {
      * Setup recording process.
      */
     private void setupRecording() {
+    	//get audio settings
+    	
+    	AudioSettings audioSettings = getAudioSettings();
 		int captureDuration = 0;
 		int time = getRecordDurationValue(); //time in seconds
 		//check if timed recording is set
@@ -518,7 +522,7 @@ public class JcasterGUI {
 			} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
 				settings = new CaptureSettings(AudioVideoTypes.AUDIO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
 			}
-			record = new Record(settings);
+			record = new Record(settings, audioSettings);
 		} catch (Exception e) {
 			System.out.println("Error when trying to configure recording settings.");
 		}
@@ -716,30 +720,23 @@ public class JcasterGUI {
     	return (int) Double.parseDouble(txtRecordDuration.getText());
     }
     
-//    /**
-//     * Get audio settings.
-//     * 
-//     * @return AudioSettings
-//     */
-//    private AudioSettings getAudioSettings() {
-//    	//get settings from the audio settings tab
-//    	int channels = Integer.parseInt(txtAudiochannels.getText());
-//    	int sampleSize = 0;
-//    	if (rdbtnbit.isEnabled()) {
-//    		sampleSize = Integer.parseInt(rdbtnbit.getText());
-//    	} else if (rdbtnbit_1.isEnabled()) {
-//    		sampleSize = Integer.parseInt(rdbtnbit_1.getText());
-//    	}
-////    	int sampleRate = Integer.parseInt(spinner.getValue().toString()); //TODO: is this correct?
-//    	int sampleRate = 44100; //TODO: remove
-//    	
-////    	Object item = spinner.getValue();
-////    	if(item != null) {
-////    		String selectedString = item.toString();
-////    		sampleRate = Integer.parseInt(selectedString);
-////    	}
-//    	
-//    	return new AudioSettings(channels, sampleSize, sampleRate);
-//    }
+    /**
+     * Get audio settings.
+     * 
+     * @return AudioSettings
+     */
+    private AudioSettings getAudioSettings() {
+    	//get settings from the audio settings tab
+    	int channels = Integer.parseInt(txtAudiochannels.getText());
+    	int sampleSize = 0;
+    	if (rdbtnbit.isEnabled()) {
+    		sampleSize = 8;
+    	} else if (rdbtnbit_1.isEnabled()) {
+    		sampleSize = 16;
+    	}
+    	String strObject = (String)spinner.getValue();
+    	int sampleRate = Integer.parseInt(strObject);
+    	return new AudioSettings(channels, sampleSize, sampleRate);
+    }
     
 }
