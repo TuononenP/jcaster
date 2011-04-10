@@ -15,6 +15,7 @@
 package audio;
 
 //  Native Java Classes
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
@@ -34,18 +35,18 @@ public class MicrophoneAudioSource extends Source {
 
 	//  Instance variables
 	private TargetDataLine _targetDataLine;
-
+	
 	//----------------------------------------------------------------------------------------------
 	//  Initialize
 	//----------------------------------------------------------------------------------------------
-	public MicrophoneAudioSource (String $id) {
+	public MicrophoneAudioSource(String $id, AudioSettings audioSettings) {
 		super($id, AudioVideoTypes.AUDIO);
-
+		
 		TEMP_BUFFER = new byte[AudioConstants.TARGET_DATA_LINE_BYTE_SIZE];
 
 		try {
-			_targetDataLine = (TargetDataLine)AudioSystem.getLine(new DataLine.Info(TargetDataLine.class, AudioSettings.getConfiguredAudioFormat()));
-			_targetDataLine.open(AudioSettings.getConfiguredAudioFormat());
+			_targetDataLine = (TargetDataLine)AudioSystem.getLine(new DataLine.Info(TargetDataLine.class, audioSettings.getConfiguredAudioFormat()));
+			_targetDataLine.open(audioSettings.getConfiguredAudioFormat());
 			_targetDataLine.start();
 		}
 		catch (LineUnavailableException $ignore) {
@@ -61,5 +62,5 @@ public class MicrophoneAudioSource extends Source {
 			$audioPacket.pack(System.nanoTime(), TEMP_BUFFER);
 		}
 	}
-
+ 
 }

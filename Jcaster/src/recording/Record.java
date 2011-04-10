@@ -39,7 +39,7 @@ public class Record {
     /**
      * Constructor.
      */
-    public Record(CaptureSettings settings) {
+    public Record(CaptureSettings settings, AudioSettings audioSettings) {
         RobotVideoSource robotVideoSource = null;
         MicrophoneAudioSource microphoneAudioSource = null;
 
@@ -48,7 +48,7 @@ public class Record {
         	//video input from the screen
             robotVideoSource = new RobotVideoSource("RobotVideoSource", VideoConstants.SCREEN_WIDTH, VideoConstants.SCREEN_HEIGHT);
             //audio input from microphone
-            microphoneAudioSource = new MicrophoneAudioSource("MicrophoneAudioSource");
+            microphoneAudioSource = new MicrophoneAudioSource("MicrophoneAudioSource", audioSettings);
         }
         catch (Exception e) {
         	System.out.println("Couldn't create audio or video source(s).");
@@ -58,7 +58,7 @@ public class Record {
         SourceGroup sourceGroup = PacketMultibroadcaster.makeSourceGroup(robotVideoSource, microphoneAudioSource);
 
         //register Writer to SourceGroup
-        registerWriterToSourceGroup(sourceGroup, settings);
+        registerWriterToSourceGroup(sourceGroup, settings, audioSettings);
     }
 
     /**
@@ -67,20 +67,20 @@ public class Record {
      * @param sg SourceGroup
      * @param settings CaptureSettings
      */
-    public void registerWriterToSourceGroup(SourceGroup sg, CaptureSettings settings) {
+    public void registerWriterToSourceGroup(SourceGroup sg, CaptureSettings settings, AudioSettings audioSettings) {
     	try {
         	if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
         		//video with audio
         		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
-        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(), AudioVideoTypes.AUDIO_AND_VIDEO));
+        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(), AudioVideoTypes.AUDIO_AND_VIDEO, audioSettings));
         	} else if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
         		//only audio
         		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
-        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.AUDIO));
+        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.AUDIO, audioSettings));
         	} else if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.VIDEO)) {
         		//only video
         		PacketMultibroadcaster.registerWriterToSourceGroup(sg,
-        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.VIDEO));
+        				new Container(settings.getOutputDirPath(), settings.getFileName(), settings.getFileType(),  AudioVideoTypes.VIDEO, audioSettings));
         	}
 		} catch (Exception e) {
 			System.out.println("Failed to register writers to a source group.");

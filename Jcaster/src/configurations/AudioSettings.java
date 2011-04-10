@@ -26,17 +26,13 @@ import constants.AudioConstants;
  */
 public class AudioSettings {
 
-	private static int sampleRateAsInt = 44100;                        //  8000, 11025, 16000, 22050, 44100 in Hz
-	private static int sampleSizeInBits = 16;                          //  8, 16
-	private static int numberOfChannels = 2;                           //  1, 2
+	private int sampleRateAsInt = 44100;                        //  8000, 11025, 16000, 22050, 44100 in Hz
+	private int sampleSizeInBits = 16;                          //  8, 16
+	private int numberOfChannels = 2;                           //  1, 2
 
-	public static AudioFormat configuredAudioFormat = new AudioFormat(AudioConstants.SAMPLE_RATE,
+	public AudioFormat configuredAudioFormat = new AudioFormat(getSampleRateAsInt(),
 			getSampleSizeInBits(), getNumberOfChannels(), AudioConstants.SIGNED,
     		AudioConstants.BIG_ENDIAN);
-	
-	public static AudioFormat getConfigureAudioFormat() {
-		return configuredAudioFormat;
-	}
 	
 	/**
 	 * Constructor.
@@ -52,7 +48,7 @@ public class AudioSettings {
 		
 	}
 	
-	public static int getSampleRateAsInt() {
+	public int getSampleRateAsInt() {
 		return sampleRateAsInt;
 	}
 
@@ -60,7 +56,7 @@ public class AudioSettings {
 		this.sampleRateAsInt = sampleRateAsInt;
 	}
 
-	public static int getSampleSizeInBits() {
+	public int getSampleSizeInBits() {
 		return sampleSizeInBits;
 	}
 
@@ -68,7 +64,7 @@ public class AudioSettings {
 		this.sampleSizeInBits = sampleSizeInBits;
 	}
 
-	public static int getNumberOfChannels() {
+	public int getNumberOfChannels() {
 		return numberOfChannels;
 	}
 
@@ -76,7 +72,7 @@ public class AudioSettings {
 		this.numberOfChannels = numberOfChannels;
 	}
 
-	public static AudioFormat getConfiguredAudioFormat() {
+	public AudioFormat getConfiguredAudioFormat() {
 		return configuredAudioFormat;
 	}
 

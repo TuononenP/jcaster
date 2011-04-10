@@ -31,7 +31,6 @@ import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.video.ConverterFactory;
 
 import configurations.AudioSettings;
-import constants.AudioConstants;
 import constants.EncodingConstants;
 import constants.VideoConstants;
 
@@ -42,12 +41,14 @@ public class Container extends Writer {
     
     //  Instance variables
     private IMediaWriter _mediaWriter;
+    private AudioSettings audioSettings;
     
     //----------------------------------------------------------------------------------------------
     //  Initialize
     //----------------------------------------------------------------------------------------------
-    public Container(String $ouputDirectory, String $filename, String $extension, String $type) {
+    public Container(String $ouputDirectory, String $filename, String $extension, String $type, AudioSettings audioSettings) {
         super($ouputDirectory, $filename, $extension, $type);
+        this.audioSettings = audioSettings;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class Container extends Writer {
             audioBuffer.setType(IBuffer.Type.IBUFFER_SINT16);
 
             IAudioSamples audioSamples = IAudioSamples.make(audioBuffer, 1, IAudioSamples.Format.FMT_S16);
-            audioSamples.setComplete(true, audioBuffer.getSize(), AudioSettings.getSampleRateAsInt(), AudioSettings.getNumberOfChannels(), IAudioSamples.Format.FMT_S16, Global.NO_PTS);
+            audioSamples.setComplete(true, audioBuffer.getSize(), audioSettings.getSampleRateAsInt(), audioSettings.getNumberOfChannels(), IAudioSamples.Format.FMT_S16, Global.NO_PTS);
 
             _mediaWriter.encodeAudio(EncodingConstants.AUDIO_STREAM_ID, audioSamples);
         }
@@ -95,7 +96,7 @@ public class Container extends Writer {
         }
 
         if (getSupportsAudio()) {
-            _mediaWriter.addAudioStream(EncodingConstants.AUDIO_STREAM_ID, 0, ICodec.guessEncodingCodec(null, null, getOutputDirectory() + File.separator + getFilename() + "." + getExtension(), null, ICodec.Type.CODEC_TYPE_AUDIO), AudioConstants.NUMBER_OF_CHANNELS, AudioSettings.getSampleRateAsInt());
+            _mediaWriter.addAudioStream(EncodingConstants.AUDIO_STREAM_ID, 0, ICodec.guessEncodingCodec(null, null, getOutputDirectory() + File.separator + getFilename() + "." + getExtension(), null, ICodec.Type.CODEC_TYPE_AUDIO), audioSettings.getNumberOfChannels(), audioSettings.getSampleRateAsInt());
         }
     }
 
