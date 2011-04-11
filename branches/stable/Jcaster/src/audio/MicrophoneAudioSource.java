@@ -15,7 +15,6 @@
 package audio;
 
 //  Native Java Classes
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
