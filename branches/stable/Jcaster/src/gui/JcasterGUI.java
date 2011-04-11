@@ -21,6 +21,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
@@ -790,8 +791,23 @@ public class JcasterGUI {
 		btnStop.setEnabled(false);
 		btnPause.setEnabled(false);
 		btnRecord.setEnabled(true);
+		playback();
 	}
 
+	/**
+	 * Asks if user wants to playback the newly created recording.
+	 */
+	private void playback() {
+		try {
+			Playback dialog = new Playback();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+			dialog.setLocationRelativeTo(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}
+	
 	/**
 	 * Action for Exit menu item.
 	 * 
