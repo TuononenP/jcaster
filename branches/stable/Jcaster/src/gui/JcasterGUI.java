@@ -638,13 +638,18 @@ public class JcasterGUI {
 			captureDuration = time*1000; //time in milliseconds
 		}
 		try {
+			String saveLocation = saveLocTextField.getText();
+			String filename = filenameTextField.getText();
+			String extension = getSelectedExtensionRadioButtonName();
 			String selectedAudioVideoType = getSelectedAudioVideoTypeRadioButtonName();
 			if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
-				settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
+				settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, saveLocation, filename, extension, captureDuration);
 			} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.VIDEO)) {
-				settings = new CaptureSettings(AudioVideoTypes.VIDEO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
+				settings = new CaptureSettings(AudioVideoTypes.VIDEO, saveLocation, filename, extension, captureDuration);
 			} else if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO)) {
-				settings = new CaptureSettings(AudioVideoTypes.AUDIO, saveLocTextField.getText(), filenameTextField.getText(), getSelectedExtensionRadioButtonName(), captureDuration);
+				//override audio format over video format
+				extension = getSelectedAudioFormat();
+				settings = new CaptureSettings(AudioVideoTypes.AUDIO, saveLocation, filename, extension, captureDuration);
 			}
 			record = new Record(settings, audioSettings);
 		} catch (Exception e) {
@@ -854,7 +859,7 @@ public class JcasterGUI {
 		if(rdbtnMp3.isSelected()) {
 			return rdbtnMp3.getText();
 		} else if(rdbtnOggVorbis.isSelected()) {
-			return rdbtnOggVorbis.getText();
+			return "ogg";
 		} else if(rdbtnAac.isSelected()) {
 			return rdbtnAac.getText();
 		} else if(rdbtnPcm.isSelected()) {
