@@ -29,7 +29,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JButton;
-import javax.swing.SpinnerNumberModel;
 
 import java.awt.Insets;
 import javax.swing.JLabel;
