@@ -83,7 +83,6 @@ public class JcasterGUI {
 	private JRadioButton rdbtnMp3;
 	private JRadioButton rdbtnOggVorbis;
 	private JRadioButton rdbtnAac;
-	private JRadioButton rdbtnPcm;
 	private JRadioButton rdbtnWav;
 	private JRadioButton rdbtnBitSize8;
 	private JRadioButton rdbtnBitSize16;
@@ -476,29 +475,20 @@ public class JcasterGUI {
 		gbc_rdbtnAac.gridy = 1;
 		panel_1.add(rdbtnAac, gbc_rdbtnAac);
 
-		//create a pcm audio format radio button
-		rdbtnPcm = new JRadioButton("pcm");
-		GridBagConstraints gbc_rdbtnPcm = new GridBagConstraints();
-		gbc_rdbtnPcm.insets = new Insets(0, 0, 5, 5);
-		gbc_rdbtnPcm.gridx = 4;
-		gbc_rdbtnPcm.gridy = 1;
-		panel_1.add(rdbtnPcm, gbc_rdbtnPcm);
-
-		//create a wav audio format radio button
-		rdbtnWav = new JRadioButton("wav");
-		GridBagConstraints gbc_rdbtnWav = new GridBagConstraints();
-		gbc_rdbtnWav.insets = new Insets(0, 0, 5, 5);
-		gbc_rdbtnWav.gridx = 5;
-		gbc_rdbtnWav.gridy = 1;
-		panel_1.add(rdbtnWav, gbc_rdbtnWav);
-
 		//form a button group for audio formats
 		audioFormatBtnGroup = new ButtonGroup();
 		audioFormatBtnGroup.add(rdbtnMp3);
 		audioFormatBtnGroup.add(rdbtnOggVorbis);
 		audioFormatBtnGroup.add(rdbtnAac);
-		audioFormatBtnGroup.add(rdbtnPcm);
-		audioFormatBtnGroup.add(rdbtnWav);
+		
+				//create a wav audio format radio button
+				rdbtnWav = new JRadioButton("wav");
+				GridBagConstraints gbc_rdbtnWav = new GridBagConstraints();
+				gbc_rdbtnWav.insets = new Insets(0, 0, 5, 5);
+				gbc_rdbtnWav.gridx = 4;
+				gbc_rdbtnWav.gridy = 1;
+				panel_1.add(rdbtnWav, gbc_rdbtnWav);
+				audioFormatBtnGroup.add(rdbtnWav);
 
 		//create a label for audio channels
 		JLabel lblChannels = new JLabel("Channels");
@@ -862,8 +852,6 @@ public class JcasterGUI {
 			return "ogg";
 		} else if(rdbtnAac.isSelected()) {
 			return rdbtnAac.getText();
-		} else if(rdbtnPcm.isSelected()) {
-			return rdbtnPcm.getText();
 		} else if(rdbtnWav.isSelected()) {
 			return rdbtnWav.getText();
 		} else {
@@ -908,7 +896,6 @@ public class JcasterGUI {
 	 */
 	private AudioSettings getAudioSettings() {
 		//get settings from the audio settings tab
-//		String audioFormat = getSelectedAudioFormat(); //not currently used //TODO: Use selected audio format
 		int channels = getSelectedAudioChannelCount();
 		int sampleSize = getSelectedSampleSize();
 		String strObject = (String)spinner.getValue();
