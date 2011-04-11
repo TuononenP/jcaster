@@ -23,6 +23,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.SwingConstants;
 
 /**
@@ -35,20 +38,7 @@ public class Playback extends JDialog {
 
 	private static final long serialVersionUID = -635280069426304097L;
 	private final JPanel contentPanel = new JPanel();
-
-//	/**
-//	 * Launch the application.
-//	 */
-//	public static void main(String[] args) {
-//		try {
-//			Playback dialog = new Playback();
-//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//			dialog.setVisible(true);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
+ 
 	/**
 	 * Create the dialog.
 	 */
@@ -70,15 +60,33 @@ public class Playback extends JDialog {
 			{
 				JButton okButton = new JButton("OK");
 				okButton.setActionCommand("OK");
+				
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						playbackRecording();
+					}
+				});
+				
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.setActionCommand("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						setVisible(false);
+						dispose();
+					}
+				});
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+	
+	//TODO: implement
+	private void playbackRecording() {
+		
 	}
 
 }
