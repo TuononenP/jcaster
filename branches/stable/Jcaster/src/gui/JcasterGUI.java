@@ -453,6 +453,7 @@ public class JcasterGUI {
 
 		//create an mp3 audio format radio button
 		rdbtnMp3 = new JRadioButton("mp3");
+		rdbtnMp3.setSelected(true); //set selected by default 
 		GridBagConstraints gbc_rdbtnMp3 = new GridBagConstraints();
 		gbc_rdbtnMp3.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnMp3.gridx = 1;
@@ -518,6 +519,7 @@ public class JcasterGUI {
 
 		//create a stereo audio radio button
 		rdbtnAudioChannelStereo = new JRadioButton("stereo");
+		rdbtnAudioChannelStereo.setSelected(true); //set selected by default
 		GridBagConstraints gbc_rdbtnAudioChannelsStereo = new GridBagConstraints();
 		gbc_rdbtnAudioChannelsStereo.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnAudioChannelsStereo.gridx = 2;
@@ -842,6 +844,58 @@ public class JcasterGUI {
 		return (int) Double.parseDouble(txtRecordDuration.getText());
 	}
 
+	
+	/**
+	 * Get the selected audio format.
+	 * 
+	 * @return String
+	 */
+	private String getSelectedAudioFormat() {
+		if(rdbtnMp3.isSelected()) {
+			return rdbtnMp3.getText();
+		} else if(rdbtnOggVorbis.isSelected()) {
+			return rdbtnOggVorbis.getText();
+		} else if(rdbtnAac.isSelected()) {
+			return rdbtnAac.getText();
+		} else if(rdbtnPcm.isSelected()) {
+			return rdbtnPcm.getText();
+		} else if(rdbtnWav.isSelected()) {
+			return rdbtnWav.getText();
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Get the selected audio channel count.
+	 * 
+	 * @return int
+	 */
+	private int getSelectedAudioChannelCount() {
+		if (rdbtnAudioChannelMono.isSelected()) {
+			return 1;
+		} else if(rdbtnAudioChannelStereo.isSelected()) {
+			return 2;
+		} else {
+			return 0;
+		}
+	}
+	
+	/**
+	 * Get selected sample size value.
+	 * 
+	 * @return int
+	 */
+	private int getSelectedSampleSize() {
+		if (rdbtnBitSize8.isSelected()) {
+			return 8;
+		} else if (rdbtnBitSize16.isSelected()) {
+			return 16;
+		} else {
+			return 0;
+		}
+	}
+	
 	/**
 	 * Get audio settings.
 	 * 
@@ -849,18 +903,9 @@ public class JcasterGUI {
 	 */
 	private AudioSettings getAudioSettings() {
 		//get settings from the audio settings tab
-		int channels = 0;
-		if (rdbtnAudioChannelMono.isSelected()) {
-			channels = 1;
-		} else if(rdbtnAudioChannelStereo.isSelected()) {
-			channels = 2;
-		}
-		int sampleSize = 0;
-		if (rdbtnBitSize8.isEnabled()) {
-			sampleSize = 8;
-		} else if (rdbtnBitSize16.isEnabled()) {
-			sampleSize = 16;
-		}
+//		String audioFormat = getSelectedAudioFormat(); //not currently used //TODO: Use selected audio format
+		int channels = getSelectedAudioChannelCount();
+		int sampleSize = getSelectedSampleSize();
 		String strObject = (String)spinner.getValue();
 		int sampleRate = Integer.parseInt(strObject);
 		return new AudioSettings(channels, sampleSize, sampleRate);
