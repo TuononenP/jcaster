@@ -693,9 +693,9 @@ public class JcasterGUI {
 		JOptionPane.showMessageDialog(frmJcaster,
 				"Author: Petri Tuononen\n" +
 				"Date: 4/2011\n" +
-				"Version: 0.1\n" +
+				"Version: 0.2\n" +
 				"GPLv3 license: This software can be used, modified and redistibuted freely.\n" +
-		"No warranties of any kind.");
+				"No warranties of any kind.");
 	}
 
 	/**
