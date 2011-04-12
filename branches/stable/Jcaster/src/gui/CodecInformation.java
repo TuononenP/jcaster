@@ -172,7 +172,6 @@ public class CodecInformation extends JDialog {
 		int returnVal = chooser.showOpenDialog(mainFrame);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = chooser.getSelectedFile();
-			System.out.println(file.getAbsolutePath());
 			return file.getAbsolutePath();
 		} else {
 			return null;
