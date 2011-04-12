@@ -52,6 +52,11 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 
 import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
+import com.xuggle.xuggler.ICodec;
+import com.xuggle.xuggler.IContainer;
+import com.xuggle.xuggler.IStream;
+import com.xuggle.xuggler.IStreamCoder;
+
 import java.awt.GridLayout;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerListModel;
@@ -68,6 +73,7 @@ public class JcasterGUI {
 	//global variables
 	private JFrame frmJcaster;
 	private static Record record;
+	private CaptureSettings settings;
 	private JButton btnRecord;
 	private JButton btnPause;
 	private JButton btnStop;
@@ -97,7 +103,6 @@ public class JcasterGUI {
 	private JTextField txtCountdown;
 	private JTextField txtRecordDuration;
 	private JSpinner spinner;
-	private CaptureSettings settings;
 	private JLabel lblNoteOnlyRecord;
 
 	/**
@@ -148,6 +153,68 @@ public class JcasterGUI {
 		//set layout for the frame
 		frmJcaster.getContentPane().setLayout(gridBagLayout);
 
+		//create a menubar
+		JMenuBar menuBar = new JMenuBar();
+		frmJcaster.setJMenuBar(menuBar);
+
+		//create a file menu for the menubar
+		JMenu mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+
+		//create a playback menu item for the file menu
+		JMenuItem mntmPlayback = new JMenuItem("Playback file");
+		mntmPlayback.setMnemonic(KeyEvent.VK_P);
+		mnFile.add(mntmPlayback);
+		mntmPlayback.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				playback();
+			}
+		});
+		
+		//create a codec information menu item for the file menu
+		JMenuItem mntmCodecInfo = new JMenuItem("Get codec information");
+		mntmCodecInfo.setMnemonic(KeyEvent.VK_I);
+		mnFile.add(mntmCodecInfo);
+		mntmCodecInfo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showCodecInfo2();
+			}
+		});
+		
+		//create an exit menu item for the file menu
+		JMenuItem mntmExit = new JMenuItem("Exit");
+		mntmExit.setMnemonic(KeyEvent.VK_Q);
+		mnFile.add(mntmExit);
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				exitActionPerformed(e);
+			}
+		});
+
+		//create a help menu for the menubar
+		JMenu mnHelp = new JMenu("Help");
+		menuBar.add(mnHelp);
+
+		//create a help menu item for the help menu
+		JMenuItem mntmHelp = new JMenuItem("Help");
+		mntmHelp.setMnemonic(KeyEvent.VK_F11);
+		mnHelp.add(mntmHelp);
+		mntmHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showHelpActionPerformed();
+			}
+		});
+
+		//create an about menu item for the help menu
+		JMenuItem mntmAbout = new JMenuItem("About");
+		mntmHelp.setMnemonic(KeyEvent.VK_A);
+		mnHelp.add(mntmAbout);
+		mntmAbout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				showAbout();
+			}
+		});
+		
 		//create a panel
 		JPanel panel_3 = new JPanel();
 
@@ -481,15 +548,15 @@ public class JcasterGUI {
 		audioFormatBtnGroup.add(rdbtnMp3);
 		audioFormatBtnGroup.add(rdbtnOggVorbis);
 		audioFormatBtnGroup.add(rdbtnAac);
-		
-				//create a wav audio format radio button
-				rdbtnWav = new JRadioButton("wav");
-				GridBagConstraints gbc_rdbtnWav = new GridBagConstraints();
-				gbc_rdbtnWav.insets = new Insets(0, 0, 5, 5);
-				gbc_rdbtnWav.gridx = 4;
-				gbc_rdbtnWav.gridy = 1;
-				panel_1.add(rdbtnWav, gbc_rdbtnWav);
-				audioFormatBtnGroup.add(rdbtnWav);
+
+		//create a wav audio format radio button
+		rdbtnWav = new JRadioButton("wav");
+		GridBagConstraints gbc_rdbtnWav = new GridBagConstraints();
+		gbc_rdbtnWav.insets = new Insets(0, 0, 5, 5);
+		gbc_rdbtnWav.gridx = 4;
+		gbc_rdbtnWav.gridy = 1;
+		panel_1.add(rdbtnWav, gbc_rdbtnWav);
+		audioFormatBtnGroup.add(rdbtnWav);
 
 		//create a label for audio channels
 		JLabel lblChannels = new JLabel("Channels");
@@ -569,50 +636,6 @@ public class JcasterGUI {
 		gbc_spinner.gridx = 1;
 		gbc_spinner.gridy = 4;
 		panel_1.add(spinner, gbc_spinner);
-
-		//create a menubar
-		JMenuBar menuBar = new JMenuBar();
-		frmJcaster.setJMenuBar(menuBar);
-
-		//create a file menu for the menubar
-		JMenu mnNewMenu = new JMenu("File");
-		menuBar.add(mnNewMenu);
-
-		//create an exit menu item for the file menu
-		JMenuItem mntmExit = new JMenuItem("Exit");
-		mntmExit.setMnemonic(KeyEvent.VK_Q);
-		mnNewMenu.add(mntmExit);
-		
-		//create an action listener for the exit menu item
-		mntmExit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				exitActionPerformed(e);
-			}
-		});
-
-		//create a help menu for the menubar
-		JMenu mnHelp = new JMenu("Help");
-		menuBar.add(mnHelp);
-
-		//create a help menu item for the help menu
-		JMenuItem mntmHelp = new JMenuItem("Help");
-		mntmHelp.setMnemonic(KeyEvent.VK_F11);
-		mnHelp.add(mntmHelp);
-		mntmHelp.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showHelpActionPerformed();
-			}
-		});
-
-		//create an about menu item for the help menu
-		JMenuItem mntmAbout = new JMenuItem("About");
-		mntmHelp.setMnemonic(KeyEvent.VK_A);
-		mnHelp.add(mntmAbout);
-		mntmAbout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showAbout();
-			}
-		});
 
 	}
 
@@ -711,7 +734,7 @@ public class JcasterGUI {
 			//display in textfield
 			saveLocTextField.setText(file.getAbsolutePath());
 		} else {
-			System.out.println("File access cancelled by user.");
+			//do nothing
 		}
 	} 
 
@@ -798,16 +821,27 @@ public class JcasterGUI {
 	 * Asks if user wants to playback the newly created recording.
 	 */
 	private void playback() {
-		try {
-			Playback dialog = new Playback();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-			dialog.setLocationRelativeTo(null);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
+		int response = JOptionPane.showConfirmDialog(frmJcaster,
+				"Would you like to playback the file you just recorded?",
+				"Playback",
+				JOptionPane.YES_NO_OPTION);
+		if (response == JOptionPane.YES_OPTION) {
+			//show playback dialog
+			try {
+				Playback dialog = new Playback();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+				dialog.setLocationRelativeTo(null);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		} else if (response == JOptionPane.NO_OPTION) {
+			//do nothing
+		} else if (response == JOptionPane.CLOSED_OPTION) {
+			//do nothing
+		}
 	}
-	
+
 	/**
 	 * Action for Exit menu item.
 	 * 
@@ -855,7 +889,7 @@ public class JcasterGUI {
 		return (int) Double.parseDouble(txtRecordDuration.getText());
 	}
 
-	
+
 	/**
 	 * Get the selected audio format.
 	 * 
@@ -889,7 +923,7 @@ public class JcasterGUI {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * Get selected sample size value.
 	 * 
@@ -904,7 +938,7 @@ public class JcasterGUI {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * Get audio settings.
 	 * 
@@ -917,6 +951,13 @@ public class JcasterGUI {
 		String strObject = (String)spinner.getValue();
 		int sampleRate = Integer.parseInt(strObject);
 		return new AudioSettings(channels, sampleSize, sampleRate);
+	}
+	
+	private void showCodecInfo2() {
+		CodecInformation dialog = new CodecInformation(frmJcaster);
+		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.setLocationRelativeTo(null);
+		dialog.setVisible(true);
 	}
 
 }
