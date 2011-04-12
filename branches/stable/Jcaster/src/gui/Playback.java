@@ -17,19 +17,13 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.SwingConstants;
 
 /**
- * Asks for confirmation to playback the newly recorded file.
+ * Playback recording.
  * 
  * @author Petri Tuononen
  *
@@ -44,49 +38,16 @@ public class Playback extends JDialog {
 	 */
 	public Playback() {
 		setTitle("Playback");
-		setBounds(100, 100, 340, 220);
+		setBounds(100, 100, 701, 421);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new GridLayout(0, 1, 0, 0)); {
-			JLabel lblWouldYouLike = new JLabel("Would you like to playback the file you just recorded?");
-			lblWouldYouLike.setHorizontalAlignment(SwingConstants.CENTER);
-			contentPanel.add(lblWouldYouLike);
-		}
+		contentPanel.setLayout(new GridLayout(0, 1, 0, 0));
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				
-				okButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						playbackRecording();
-					}
-				});
-				
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				cancelButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						setVisible(false);
-						dispose();
-					}
-				});
-				buttonPane.add(cancelButton);
-			}
 		}
-	}
-	
-	//TODO: implement
-	private void playbackRecording() {
-		
 	}
 
 }
