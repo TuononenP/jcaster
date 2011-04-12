@@ -14,8 +14,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package gui;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -28,6 +26,11 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+
+import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JSpinner;
@@ -39,27 +42,14 @@ public class Transcode extends JFrame {
 	private JTextField txtInputPath;
 	private JTextField outputFilename;
 	private JTextField outputFilePath;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Transcode frame = new Transcode();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JSpinner spinner;
+	private JFrame mainFrame;
 
 	/**
 	 * Create the frame.
 	 */
-	public Transcode() {
+	public Transcode(JFrame mainFrame) {
+		this.mainFrame = mainFrame;
 		setTitle("Transcode");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 445, 245);
@@ -96,6 +86,11 @@ public class Transcode extends JFrame {
 		gbc_btnBrowseInput.insets = new Insets(0, 0, 5, 0);
 		gbc_btnBrowseInput.gridx = 2;
 		gbc_btnBrowseInput.gridy = 1;
+		btnBrowseInput.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setInputFilePath();
+			}
+		});
 		contentPane.add(btnBrowseInput, gbc_btnBrowseInput);
 		
 		JLabel lblOutputFilename = new JLabel("Output filename");
@@ -123,7 +118,7 @@ public class Transcode extends JFrame {
 		gbc_lblOutputFormat.gridy = 3;
 		contentPane.add(lblOutputFormat, gbc_lblOutputFormat);
 		
-		JSpinner spinner = new JSpinner();
+		spinner = new JSpinner();
 		GridBagConstraints gbc_spinner = new GridBagConstraints();
 		gbc_spinner.anchor = GridBagConstraints.WEST;
 		gbc_spinner.insets = new Insets(0, 0, 5, 5);
@@ -131,13 +126,13 @@ public class Transcode extends JFrame {
 		gbc_spinner.gridy = 3;
 		contentPane.add(spinner, gbc_spinner);
 		
-		JLabel lblOutputFir = new JLabel("Output dir");
+		JLabel lblOutputDir = new JLabel("Output dir");
 		GridBagConstraints gbc_lblOutputFir = new GridBagConstraints();
 		gbc_lblOutputFir.anchor = GridBagConstraints.WEST;
 		gbc_lblOutputFir.insets = new Insets(0, 0, 5, 5);
 		gbc_lblOutputFir.gridx = 0;
 		gbc_lblOutputFir.gridy = 4;
-		contentPane.add(lblOutputFir, gbc_lblOutputFir);
+		contentPane.add(lblOutputDir, gbc_lblOutputFir);
 		
 		outputFilePath = new JTextField();
 		GridBagConstraints gbc_outputFilePath = new GridBagConstraints();
@@ -145,6 +140,11 @@ public class Transcode extends JFrame {
 		gbc_outputFilePath.fill = GridBagConstraints.HORIZONTAL;
 		gbc_outputFilePath.gridx = 1;
 		gbc_outputFilePath.gridy = 4;
+		outputFilePath.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setOutputDir();
+			}
+		});
 		contentPane.add(outputFilePath, gbc_outputFilePath);
 		outputFilePath.setColumns(10);
 		
@@ -164,10 +164,20 @@ public class Transcode extends JFrame {
 		gbc_panel.gridy = 6;
 		contentPane.add(panel, gbc_panel);
 		
-		JButton btnNewButton = new JButton("Transcode");
-		panel.add(btnNewButton);
+		JButton btnTranscode = new JButton("Transcode");
+		btnTranscode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				transcode();
+			}
+		});
+		panel.add(btnTranscode);
 		
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 		panel.add(btnCancel);
 	}
 
@@ -176,12 +186,17 @@ public class Transcode extends JFrame {
 		contentPane.add(lblNewLute path in string format.
 	 * @param outputFilename Absolute path in string format.
 	 */
-	private void transcode(String inputFilename, String outputFilename) {
+	private void transcode() {
+		//get input and output paths
+		String inputPath, outputPath;
+		inputPath = txtInputPath.getText();
+		outputPath = outputFilePath.getText() + File.separator + outputFilename + "." + getOutputformat();
+		
 		//create a media reader
-		IMediaReader mediaReader = ToolFactory.makeReader(inputFilename);
+		IMediaReader mediaReader = ToolFactory.makeReader(inputPath);
 
 		//create a media writer
-		IMediaWriter mediaWriter = ToolFactory.makeWriter(outputFilename, mediaReader);
+		IMediaWriter mediaWriter = ToolFactory.makeWriter(outputPath, mediaReader);
 
 		//add a writer to the reader, to create the output file
 		mediaReader.addListener(mediaWriter);
@@ -197,4 +212,46 @@ public class Transcode extends JFrame {
 		while (mediaReader.readPacket() == null);
 	}
 	
+	private String getOutputformat() {
+		return (String)spinner.getValue();
+	}
+	
+	/**
+	 * set the input file path.
+	 * 
+	 */
+	private void setInputFilePath() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Choose file");
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+		int returnVal = chooser.showOpenDialog(mainFrame);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			File file = chooser.getSelectedFile();
+			txtInputPath.setText(file.getAbsolutePath());
+		} else {
+			//do nothing
+		}
+	}
+	
+	/**
+	 * Set the output dir.
+	 * 
+	 */
+	private void setOutputDir() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new java.io.File("."));
+		chooser.setDialogTitle("Choose directory");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+
+		int returnVal = chooser.showOpenDialog(mainFrame);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			outputFilePath.setText(chooser.getSelectedFile().getAbsolutePath());
+		} else {
+			//do nothing
+		}
+	}
+
 }

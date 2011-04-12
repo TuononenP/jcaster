@@ -965,6 +965,9 @@ public class JcasterGUI {
 		return new AudioSettings(channels, sampleSize, sampleRate);
 	}
 	
+	/**
+	 * Show codec info.
+	 */
 	private void showCodecInfo() {
 		CodecInformation dialog = new CodecInformation(frmJcaster);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
