@@ -52,10 +52,6 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 
 import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
-import com.xuggle.xuggler.ICodec;
-import com.xuggle.xuggler.IContainer;
-import com.xuggle.xuggler.IStream;
-import com.xuggle.xuggler.IStreamCoder;
 
 import java.awt.GridLayout;
 import javax.swing.JSpinner;
@@ -171,13 +167,23 @@ public class JcasterGUI {
 			}
 		});
 		
+		//create a transcode menu item for the file menu
+		JMenuItem mntmTranscode = new JMenuItem("Transcode");
+		mntmTranscode.setMnemonic(KeyEvent.VK_T);
+		mnFile.add(mntmTranscode);
+		mntmTranscode.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				transcode();
+			}
+		});
+		
 		//create a codec information menu item for the file menu
 		JMenuItem mntmCodecInfo = new JMenuItem("Get codec information");
 		mntmCodecInfo.setMnemonic(KeyEvent.VK_I);
 		mnFile.add(mntmCodecInfo);
 		mntmCodecInfo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showCodecInfo2();
+				showCodecInfo();
 			}
 		});
 		
@@ -843,6 +849,13 @@ public class JcasterGUI {
 	}
 
 	/**
+	 * Transcode a file from one format to another.
+	 */
+	private void transcode() {
+		//TODO: implement transcode function
+	}
+	
+	/**
 	 * Action for Exit menu item.
 	 * 
 	 * @param e ActionEvent
@@ -888,7 +901,6 @@ public class JcasterGUI {
 	private int getRecordDurationValue() {
 		return (int) Double.parseDouble(txtRecordDuration.getText());
 	}
-
 
 	/**
 	 * Get the selected audio format.
@@ -953,7 +965,7 @@ public class JcasterGUI {
 		return new AudioSettings(channels, sampleSize, sampleRate);
 	}
 	
-	private void showCodecInfo2() {
+	private void showCodecInfo() {
 		CodecInformation dialog = new CodecInformation(frmJcaster);
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		dialog.setLocationRelativeTo(null);
