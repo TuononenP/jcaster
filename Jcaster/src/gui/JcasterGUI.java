@@ -22,7 +22,6 @@ import java.awt.GridBagConstraints;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JMenuBar;
@@ -44,7 +43,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.TimerTask;
 import java.util.Timer;
 
@@ -70,6 +68,8 @@ public class JcasterGUI {
 	private JFrame frmJcaster;
 	private static Record record;
 	private CaptureSettings settings;
+	private FileChooser fc;
+	
 	private JButton btnRecord;
 	private JButton btnPause;
 	private JButton btnStop;
@@ -642,7 +642,9 @@ public class JcasterGUI {
 		gbc_spinner.gridx = 1;
 		gbc_spinner.gridy = 4;
 		panel_1.add(spinner, gbc_spinner);
-
+		
+		//create a file chooser
+		fc = new FileChooser(frmJcaster);
 	}
 
 	/**
@@ -728,17 +730,10 @@ public class JcasterGUI {
 	 * 
 	 */
 	private void browseActionPerformed() {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Choose directory");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setAcceptAllFileFilterUsed(false);
-
-		int returnVal = chooser.showOpenDialog(frmJcaster);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = chooser.getSelectedFile();
+		String dirPath = fc.getDirectoryPath();
+		if (dirPath != null) {
 			//display in textfield
-			saveLocTextField.setText(file.getAbsolutePath());
+			saveLocTextField.setText(dirPath);
 		} else {
 			//do nothing
 		}
@@ -969,10 +964,13 @@ public class JcasterGUI {
 	 * Show codec info.
 	 */
 	private void showCodecInfo() {
-		CodecInformation dialog = new CodecInformation(frmJcaster);
-		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		dialog.setLocationRelativeTo(null);
-		dialog.setVisible(true);
+		String filePath = fc.getFilePath();
+		if (filePath != null) {
+			CodecInformation dialog = new CodecInformation(frmJcaster, filePath);
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setLocationRelativeTo(null);
+			dialog.setVisible(true);			
+		} 
 	}
 
 }
