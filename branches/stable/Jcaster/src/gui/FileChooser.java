@@ -20,7 +20,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
 /**
- * 
  * Shared methods that return file or directory
  * that is selected using JFileChooser.
  * 
