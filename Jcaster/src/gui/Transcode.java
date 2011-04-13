@@ -194,8 +194,8 @@ public class Transcode extends JFrame {
 	}
 
 	/**
-	 * Transcode file from one forblNewLabel = new JLabel("New label");
-		contentPane.add(lblNewLute path in string format.
+	 * Transcode file from one format to another.
+	 * 
 	 * @param outputFilename Absolute path in string format.
 	 */
 	private void transcode() {
@@ -237,7 +237,6 @@ public class Transcode extends JFrame {
 	
 	/**
 	 * set the input file path.
-	 * 
 	 */
 	private void setInputFilePath() {
 		String path = chooser.getFilePath();
@@ -248,7 +247,6 @@ public class Transcode extends JFrame {
 	
 	/**
 	 * Set the output dir.
-	 * 
 	 */
 	private void setOutputDir() {
 		String dir = chooser.getDirectoryPath();
