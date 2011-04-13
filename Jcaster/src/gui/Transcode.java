@@ -30,11 +30,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JFileChooser;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerListModel;
 
+/**
+ * Transcodes a file from one format to another.
+ * 
+ * @author Petri
+ *
+ * TODO: Add a check that if intput and output formats are same
+ * 		 then there is not need to transcode.
+ */
 public class Transcode extends JFrame {
 
 	private static final long serialVersionUID = 3767734593941102512L;
@@ -43,23 +51,24 @@ public class Transcode extends JFrame {
 	private JTextField outputFilename;
 	private JTextField outputFilePath;
 	private JSpinner spinner;
-	private JFrame mainFrame;
+	private FileChooser chooser;
 
 	/**
 	 * Create the frame.
 	 */
 	public Transcode(JFrame mainFrame) {
-		this.mainFrame = mainFrame;
 		setTitle("Transcode");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 445, 245);
+		setLocationRelativeTo(null);
+		setVisible(true);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{0, 0, 0, 0};
+		gbl_contentPane.columnWidths = new int[]{106, 0, 0, 0};
 		gbl_contentPane.rowHeights = new int[]{20, 0, 0, 0, 0, 30, 0, 0};
-		gbl_contentPane.columnWeights = new double[]{1.0, 1.0, 1.0, Double.MIN_VALUE};
+		gbl_contentPane.columnWeights = new double[]{0.0, 1.0, 1.0, Double.MIN_VALUE};
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
@@ -119,6 +128,7 @@ public class Transcode extends JFrame {
 		contentPane.add(lblOutputFormat, gbc_lblOutputFormat);
 		
 		spinner = new JSpinner();
+		spinner.setModel(new SpinnerListModel(new String[] {"mp4", "mov"}));
 		GridBagConstraints gbc_spinner = new GridBagConstraints();
 		gbc_spinner.anchor = GridBagConstraints.WEST;
 		gbc_spinner.insets = new Insets(0, 0, 5, 5);
@@ -140,11 +150,6 @@ public class Transcode extends JFrame {
 		gbc_outputFilePath.fill = GridBagConstraints.HORIZONTAL;
 		gbc_outputFilePath.gridx = 1;
 		gbc_outputFilePath.gridy = 4;
-		outputFilePath.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setOutputDir();
-			}
-		});
 		contentPane.add(outputFilePath, gbc_outputFilePath);
 		outputFilePath.setColumns(10);
 		
@@ -154,6 +159,11 @@ public class Transcode extends JFrame {
 		gbc_btnBrowseOutput.insets = new Insets(0, 0, 5, 0);
 		gbc_btnBrowseOutput.gridx = 2;
 		gbc_btnBrowseOutput.gridy = 4;
+		btnBrowseOutput.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setOutputDir();
+			}
+		});
 		contentPane.add(btnBrowseOutput, gbc_btnBrowseOutput);
 		
 		JPanel panel = new JPanel();
@@ -179,6 +189,8 @@ public class Transcode extends JFrame {
 			}
 		});
 		panel.add(btnCancel);
+		
+		chooser = new FileChooser(mainFrame);
 	}
 
 	/**
@@ -187,10 +199,12 @@ public class Transcode extends JFrame {
 	 * @param outputFilename Absolute path in string format.
 	 */
 	private void transcode() {
+		System.out.println(txtInputPath.getText());
+		System.out.println(outputFilePath.getText() + File.separator + outputFilename.getText() + "." + getOutputformat());
 		//get input and output paths
 		String inputPath, outputPath;
 		inputPath = txtInputPath.getText();
-		outputPath = outputFilePath.getText() + File.separator + outputFilename + "." + getOutputformat();
+		outputPath = outputFilePath.getText() + File.separator + outputFilename.getText() + "." + getOutputformat();
 		
 		//create a media reader
 		IMediaReader mediaReader = ToolFactory.makeReader(inputPath);
@@ -212,6 +226,11 @@ public class Transcode extends JFrame {
 		while (mediaReader.readPacket() == null);
 	}
 	
+	/**
+	 * Get the output format from the spinner.
+	 * 
+	 * @return String Output format.
+	 */
 	private String getOutputformat() {
 		return (String)spinner.getValue();
 	}
@@ -221,17 +240,9 @@ public class Transcode extends JFrame {
 	 * 
 	 */
 	private void setInputFilePath() {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Choose file");
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-		int returnVal = chooser.showOpenDialog(mainFrame);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = chooser.getSelectedFile();
-			txtInputPath.setText(file.getAbsolutePath());
-		} else {
-			//do nothing
+		String path = chooser.getFilePath();
+		if (path != null) {
+			txtInputPath.setText(path);
 		}
 	}
 	
@@ -240,17 +251,9 @@ public class Transcode extends JFrame {
 	 * 
 	 */
 	private void setOutputDir() {
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(new java.io.File("."));
-		chooser.setDialogTitle("Choose directory");
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setAcceptAllFileFilterUsed(false);
-
-		int returnVal = chooser.showOpenDialog(mainFrame);
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			outputFilePath.setText(chooser.getSelectedFile().getAbsolutePath());
-		} else {
-			//do nothing
+		String dir = chooser.getDirectoryPath();
+		if (dir != null) {
+			outputFilePath.setText(dir);
 		}
 	}
 
