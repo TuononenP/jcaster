@@ -18,10 +18,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.xuggle.mediatool.IMediaReader;
-import com.xuggle.mediatool.IMediaViewer;
-import com.xuggle.mediatool.IMediaWriter;
-import com.xuggle.mediatool.ToolFactory;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
@@ -35,15 +31,15 @@ import javax.swing.JButton;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerListModel;
 
+import transcode.Transcode;
+
 /**
  * Transcodes a file from one format to another.
  * 
  * @author Petri
  *
- * TODO: Add a check that if intput and output formats are same
- * 		 then there is not need to transcode.
  */
-public class Transcode extends JFrame {
+public class TranscodeFrame extends JFrame {
 
 	private static final long serialVersionUID = 3767734593941102512L;
 	private JPanel contentPane;
@@ -52,11 +48,13 @@ public class Transcode extends JFrame {
 	private JTextField outputFilePath;
 	private JSpinner spinner;
 	private FileChooser chooser;
+	private JFrame mainFrame;
 
 	/**
 	 * Create the frame.
 	 */
-	public Transcode(JFrame mainFrame) {
+	public TranscodeFrame(JFrame mainFrame) {
+		this.mainFrame = mainFrame;
 		setTitle("Transcode");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 445, 245);
@@ -199,31 +197,12 @@ public class Transcode extends JFrame {
 	 * @param outputFilename Absolute path in string format.
 	 */
 	private void transcode() {
-		System.out.println(txtInputPath.getText());
-		System.out.println(outputFilePath.getText() + File.separator + outputFilename.getText() + "." + getOutputformat());
 		//get input and output paths
 		String inputPath, outputPath;
 		inputPath = txtInputPath.getText();
 		outputPath = outputFilePath.getText() + File.separator + outputFilename.getText() + "." + getOutputformat();
 		
-		//create a media reader
-		IMediaReader mediaReader = ToolFactory.makeReader(inputPath);
-
-		//create a media writer
-		IMediaWriter mediaWriter = ToolFactory.makeWriter(outputPath, mediaReader);
-
-		//add a writer to the reader, to create the output file
-		mediaReader.addListener(mediaWriter);
-
-		//create a media viewer with stats enabled
-		IMediaViewer mediaViewer = ToolFactory.makeViewer(true);
-
-		//add a viewer to the reader, to see the decoded media
-		mediaReader.addListener(mediaViewer);
-
-		//read and decode packets from the source file and
-		//dispatch decoded audio and video to the writer
-		while (mediaReader.readPacket() == null);
+		new Transcode(inputPath, outputPath, mainFrame);
 	}
 	
 	/**

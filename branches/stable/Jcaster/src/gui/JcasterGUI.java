@@ -867,7 +867,7 @@ public class JcasterGUI {
 	 * Transcode a file from one format to another.
 	 */
 	private void transcode() {
-		new Transcode(frmJcaster);
+		new TranscodeFrame(frmJcaster);
 	}
 	
 	/**
