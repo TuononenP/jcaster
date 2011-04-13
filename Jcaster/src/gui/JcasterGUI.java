@@ -51,6 +51,8 @@ import javax.swing.JRadioButton;
 
 import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 
+import decode.DecodeAndPlayVideo;
+
 import java.awt.GridLayout;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerListModel;
@@ -163,7 +165,7 @@ public class JcasterGUI {
 		mnFile.add(mntmPlayback);
 		mntmPlayback.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				playback();
+				playbackMenuItemAction();
 			}
 		});
 		
@@ -815,27 +817,35 @@ public class JcasterGUI {
 		btnStop.setEnabled(false);
 		btnPause.setEnabled(false);
 		btnRecord.setEnabled(true);
-		playback();
+		playbackWithConfirmDialog();
+	}
+
+	/**
+	 * Playback (decode) media file.
+	 */
+	private void playback(String filename) {
+		try {
+			DecodeAndPlayVideo decode = new DecodeAndPlayVideo(filename);
+			decode.startDecoding();
+//			Playback dialog = new Playback();
+//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//			dialog.setVisible(true);
+//			dialog.setLocationRelativeTo(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 	}
 
 	/**
 	 * Asks if user wants to playback the newly created recording.
 	 */
-	private void playback() {
+	private void playbackWithConfirmDialog() {
 		int response = JOptionPane.showConfirmDialog(frmJcaster,
 				"Would you like to playback the file you just recorded?",
 				"Playback",
 				JOptionPane.YES_NO_OPTION);
 		if (response == JOptionPane.YES_OPTION) {
-			//show playback dialog
-			try {
-				Playback dialog = new Playback();
-				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-				dialog.setVisible(true);
-				dialog.setLocationRelativeTo(null);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}	
+			playback(getFullOutputPath());
 		} else if (response == JOptionPane.NO_OPTION) {
 			//do nothing
 		} else if (response == JOptionPane.CLOSED_OPTION) {
@@ -843,6 +853,16 @@ public class JcasterGUI {
 		}
 	}
 
+	/**
+	 * Opens a file chooser to select the media file to be decoded.
+	 */
+	private void playbackMenuItemAction() {
+		String filename = fc.getFilePath();
+		if (filename != null) {
+			playback(filename);
+		}
+	}
+	
 	/**
 	 * Transcode a file from one format to another.
 	 */
@@ -944,6 +964,16 @@ public class JcasterGUI {
 		} else {
 			return 0;
 		}
+	}
+	
+	/**
+	 * Return a output path formed from output dir, filename and extension.
+	 * 
+	 * @return Absolute output path.
+	 */
+	private String getFullOutputPath() {
+		return saveLocTextField.getText() 
+		+ filenameTextField.getText() + "." + getSelectedExtensionRadioButtonName();
 	}
 
 	/**
