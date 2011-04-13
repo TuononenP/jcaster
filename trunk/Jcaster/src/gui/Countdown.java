@@ -76,7 +76,7 @@ public class Countdown extends JFrame {
 	}
 
 	/**
-	 * Launch the application.
+	 * Launch the frame.
 	 */
 	public void launch() {
 		EventQueue.invokeLater(new Runnable() {

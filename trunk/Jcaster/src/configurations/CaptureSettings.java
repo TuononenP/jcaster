@@ -16,6 +16,12 @@ package configurations;
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import java.io.File;
 
+/**
+ * Get capture specific settings.
+ * 
+ * @author Petri Tuononen
+ *
+ */
 public class CaptureSettings {
 
     // Variables
