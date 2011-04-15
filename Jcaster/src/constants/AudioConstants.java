@@ -14,7 +14,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package constants;
 
-import javax.sound.sampled.AudioFormat;
 
 /**
  * Constants for Audio.
@@ -33,8 +32,4 @@ public class AudioConstants {
 	public static final boolean SIGNED = true;                                  //  true, false
 	public static final boolean BIG_ENDIAN = false;                             //  true, false
 
-	public static AudioFormat configuredAudioFormat = new AudioFormat(AudioConstants.SAMPLE_RATE,
-			SAMPLE_SIZE_IN_BITS, NUMBER_OF_CHANNELS, AudioConstants.SIGNED,
-    		AudioConstants.BIG_ENDIAN);
-	
 }
