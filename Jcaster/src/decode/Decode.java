@@ -34,27 +34,14 @@ import com.xuggle.xuggler.demos.VideoImage;
  * at the frame-rate specified by the container, on a 
  * window.
  * 
+ * NO AUDIO. TODO: Add audio stream
+ * 
  * @author aclarke
  * @author Petri Tuononen
  *
  */
 public class Decode {
 
-	//global variables
-	private String filename;
-	private int width;
-	private int height;
-	
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param filename
-	 */
-	public Decode(String filename) {
-		this.filename = filename;
-	}
-	
 	/**
 	 * Takes a media container (file) as an argument, opens it,
 	 * opens up a Swing window and displays
@@ -63,7 +50,7 @@ public class Decode {
 	 * @param filename
 	 */
 	@SuppressWarnings("deprecation")
-	public void startDecoding() {
+	public Decode(String filename) {
 		// Let's make sure that we can actually convert video pixel formats.
 		if (!IVideoResampler.isSupported(
 				IVideoResampler.Feature.FEATURE_COLORSPACECONVERSION))
@@ -120,8 +107,6 @@ public class Decode {
 						"resampler for: " + filename);
 		}
 		
-		width = videoCoder.getWidth();
-		height = videoCoder.getHeight();
 		/*
 		 * And once we have that, we draw a window on screen
 		 */
@@ -277,8 +262,6 @@ public class Decode {
 	 */
 	private void openJavaWindow() {
 		mScreen = new VideoImage();
-		mScreen.setSize(width, height);
-		mScreen.setVisible(true);
 	}
 
 	/**
