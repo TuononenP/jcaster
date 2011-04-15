@@ -627,6 +627,7 @@ public class JcasterGUI {
 
 		//create a label for audio sample rate
 		JLabel lblSampleRate = new JLabel("Sample rate");
+		lblSampleRate.setToolTipText("use cautiously");
 		GridBagConstraints gbc_lblSampleRate = new GridBagConstraints();
 		gbc_lblSampleRate.anchor = GridBagConstraints.EAST;
 		gbc_lblSampleRate.insets = new Insets(0, 0, 0, 5);
