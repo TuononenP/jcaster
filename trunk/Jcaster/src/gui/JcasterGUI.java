@@ -825,12 +825,7 @@ public class JcasterGUI {
 	 */
 	private void playback(String filename) {
 		try {
-			Decode decode = new Decode(filename);
-			decode.startDecoding();
-//			Playback dialog = new Playback();
-//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//			dialog.setVisible(true);
-//			dialog.setLocationRelativeTo(null);
+			new Decode(filename);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
