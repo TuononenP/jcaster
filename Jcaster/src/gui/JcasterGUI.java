@@ -51,7 +51,7 @@ import javax.swing.JRadioButton;
 
 import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 
-import decode.DecodeAndPlayVideo;
+import decode.Decode;
 
 import java.awt.GridLayout;
 import javax.swing.JSpinner;
@@ -825,7 +825,7 @@ public class JcasterGUI {
 	 */
 	private void playback(String filename) {
 		try {
-			DecodeAndPlayVideo decode = new DecodeAndPlayVideo(filename);
+			Decode decode = new Decode(filename);
 			decode.startDecoding();
 //			Playback dialog = new Playback();
 //			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

@@ -7,8 +7,8 @@
 	<classpathentry exported="true" kind="lib" path="lib/logback-core.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/PacketMultibroadcaster.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/slf4j-api.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xuggle-xuggler-test.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/xuggle-xuggler.jar"/>
 	<classpathentry kind="lib" path="miglayout15-swing.jar" sourcepath="miglayout-src.zip"/>
+	<classpathentry kind="lib" path="lib/xuggle-xuggler-test.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/xuggle-xuggler.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

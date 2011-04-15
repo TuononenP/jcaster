@@ -38,7 +38,7 @@ import com.xuggle.xuggler.demos.VideoImage;
  * @author Petri Tuononen
  *
  */
-public class DecodeAndPlayVideo {
+public class Decode {
 
 	//global variables
 	private String filename;
@@ -51,7 +51,7 @@ public class DecodeAndPlayVideo {
 	 * 
 	 * @param filename
 	 */
-	public DecodeAndPlayVideo(String filename) {
+	public Decode(String filename) {
 		this.filename = filename;
 	}
 	
