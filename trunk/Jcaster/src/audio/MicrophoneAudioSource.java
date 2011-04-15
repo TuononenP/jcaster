@@ -24,6 +24,7 @@ import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 import com.cattura.packet_multibroadcaster.implementations.Source;
 import com.cattura.packet_multibroadcaster.value_objects.AudioPacket;
 
+import configurations.AudioSettings;
 import constants.AudioConstants;
 
 public class MicrophoneAudioSource extends Source {
@@ -37,14 +38,15 @@ public class MicrophoneAudioSource extends Source {
 	//----------------------------------------------------------------------------------------------
 	//  Initialize
 	//----------------------------------------------------------------------------------------------
-	public MicrophoneAudioSource (String $id) {
+	public MicrophoneAudioSource (String $id, AudioSettings audioSettings) {
 		super($id, AudioVideoTypes.AUDIO);
 
 		TEMP_BUFFER = new byte[AudioConstants.TARGET_DATA_LINE_BYTE_SIZE];
 
 		try {
-			_targetDataLine = (TargetDataLine)AudioSystem.getLine(new DataLine.Info(TargetDataLine.class, AudioConstants.configuredAudioFormat));
-			_targetDataLine.open(AudioConstants.configuredAudioFormat);
+			_targetDataLine = (TargetDataLine)AudioSystem.getLine(new DataLine.Info(TargetDataLine.class,
+					audioSettings.configuredAudioFormat));
+			_targetDataLine.open(audioSettings.getConfiguredAudioFormat());
 			_targetDataLine.start();
 		}
 		catch (LineUnavailableException $ignore) {

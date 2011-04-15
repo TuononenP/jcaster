@@ -40,25 +40,22 @@ public class Record {
      * Constructor.
      */
     public Record(CaptureSettings settings, AudioSettings audioSettings) {
-        RobotVideoSource robotVideoSource = null;
-        MicrophoneAudioSource microphoneAudioSource = null;
+    	//create video and audio sources
+    	try {
+    		//video input from the screen
+    		RobotVideoSource robotVideoSource = new RobotVideoSource("RobotVideoSource", VideoConstants.SCREEN_WIDTH, VideoConstants.SCREEN_HEIGHT);
+    		//audio input from microphone
+    		MicrophoneAudioSource microphoneAudioSource = new MicrophoneAudioSource("MicrophoneAudioSource", audioSettings);
 
-        //create video and audio sources
-        try {
-        	//video input from the screen
-            robotVideoSource = new RobotVideoSource("RobotVideoSource", VideoConstants.SCREEN_WIDTH, VideoConstants.SCREEN_HEIGHT);
-            //audio input from microphone
-            microphoneAudioSource = new MicrophoneAudioSource("MicrophoneAudioSource");
-        }
-        catch (Exception e) {
-        	System.out.println("Couldn't create audio or video source(s).");
-        }
-        
-        //create a source group
-        SourceGroup sourceGroup = PacketMultibroadcaster.makeSourceGroup(robotVideoSource, microphoneAudioSource);
+    		//create a source group
+    		SourceGroup sourceGroup = PacketMultibroadcaster.makeSourceGroup(robotVideoSource, microphoneAudioSource);
 
-        //register Writer to SourceGroup
-        registerWriterToSourceGroup(sourceGroup, settings, audioSettings);
+    		//register Writer to SourceGroup
+    		registerWriterToSourceGroup(sourceGroup, settings, audioSettings);
+    	}
+    	catch (Exception e) {
+    		//    		System.out.println("Couldn't create audio or video source(s).");
+    	}
     }
 
     /**
@@ -67,7 +64,7 @@ public class Record {
      * @param sg SourceGroup
      * @param settings CaptureSettings
      */
-    public void registerWriterToSourceGroup(SourceGroup sg, CaptureSettings settings, AudioSettings audioSettings) {
+    private void registerWriterToSourceGroup(SourceGroup sg, CaptureSettings settings, AudioSettings audioSettings) {
     	try {
         	if (settings.getAudioVideoType().equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
         		//video with audio
