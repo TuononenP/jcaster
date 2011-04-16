@@ -51,7 +51,7 @@ import javax.swing.JRadioButton;
 
 import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 
-import decode.Decode;
+import decode.DecodeVideo;
 
 import java.awt.GridLayout;
 import javax.swing.JSpinner;
@@ -826,7 +826,7 @@ public class JcasterGUI {
 	 */
 	private void playback(String filename) {
 		try {
-			new Decode(filename);
+			new DecodeVideo(filename);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -863,7 +863,7 @@ public class JcasterGUI {
 	 * Transcode a file from one format to another.
 	 */
 	private void transcode() {
-		new TranscodeFrame(frmJcaster);
+		new TranscodeWindow(frmJcaster);
 	}
 	
 	/**
