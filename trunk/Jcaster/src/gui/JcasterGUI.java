@@ -37,6 +37,8 @@ import configurations.AudioSettings;
 import configurations.CaptureSettings;
 
 import recording.Record;
+import webcam.DisplayWebcamVideo;
+import webcam.WebcamDeviceAndDriver;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -176,6 +178,16 @@ public class JcasterGUI {
 		mntmTranscode.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				transcode();
+			}
+		});
+		
+		//create a display webcam menu item for the file menu
+		JMenuItem mntmWebcam = new JMenuItem("Display webcam");
+		mntmWebcam.setMnemonic(KeyEvent.VK_W);
+		mnFile.add(mntmWebcam);
+		mntmWebcam.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				displayWebcam();
 			}
 		});
 		
@@ -997,6 +1009,28 @@ public class JcasterGUI {
 			dialog.setLocationRelativeTo(null);
 			dialog.setVisible(true);			
 		} 
+	}
+	
+	/**
+	 * Display webcam on a new window.
+	 */
+	private void displayWebcam() {
+		//show webcam on a new window
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					WebcamDeviceAndDriver dd = new WebcamDeviceAndDriver(); 
+					//get driver and device names
+					String driverName = dd.getDriverName();
+					String deviceName = dd.getDeviceName();
+					if (driverName != null && deviceName != null) {
+						new DisplayWebcamVideo(driverName, deviceName);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 }

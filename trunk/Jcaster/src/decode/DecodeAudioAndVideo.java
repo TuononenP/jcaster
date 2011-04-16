@@ -64,7 +64,7 @@ public class DecodeAudioAndVideo {
 	private static long mFirstVideoTimestampInStream;
 
 	/**
-	 * Takes a media container (file) as the first argument, opens it,
+	 * Takes a media container (file), opens it,
 	 * plays audio as quickly as it can, and opens up a Swing window and displays
 	 * video frames with <i>roughly</i> the right timing.
 	 *  

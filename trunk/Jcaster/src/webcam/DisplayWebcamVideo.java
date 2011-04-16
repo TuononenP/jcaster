@@ -50,22 +50,14 @@ public class DisplayWebcamVideo {
 	 * actually opening the device.  Sorry, but that's how FFMPEG rolls.
 	 * </p>
 	 * 
-	 * @param args Must contain two strings: a FFMPEG driver name and a device name
-	 *   (which is dependent on the FFMPEG driver).
+	 * @param driverName FFMPEG driver name
+	 * @param deviceName Device name dependent on the FFMPEG driver
 	 */
 	@SuppressWarnings("deprecation")
-	public static void main(String[] args) {
-		//On Windows
-//		String driverName = "vfwcap";
-//		String deviceName=  "0";
-		
-		//On Linux
-		String driverName = "video4linux2";
-		String deviceName=  "/dev/video0";
-		
+	public DisplayWebcamVideo(String driverName, String deviceName) {
 		// Let's make sure that we can actually convert video pixel formats.
 		if (!IVideoResampler.isSupported(IVideoResampler.Feature.FEATURE_COLORSPACECONVERSION))
-			throw new RuntimeException("you must install the GPL version of Xuggler (with IVideoResampler support) for this demo to work");
+			throw new RuntimeException("you must install the GPL version of Xuggler (with IVideoResampler support)");
 
 		// Create a Xuggler container object
 		IContainer container = IContainer.make();
