@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PackageAnalysis>
+    <Package name="audio" x="507" y="358">
+        <DependencyLink destination="constants"/>
+        <DependencyLink destination="configurations"/>
+    </Package>
+    <Package name="configurations" x="280" y="358">
+        <DependencyLink destination="constants"/>
+    </Package>
+    <Package name="constants" x="492" y="158"/>
+    <Package name="decode" x="487" y="417"/>
+    <Package name="encode" x="36" y="158">
+        <DependencyLink destination="constants"/>
+        <DependencyLink destination="configurations"/>
+    </Package>
+    <Package name="gui" x="319" y="505">
+        <DependencyLink destination="webcam"/>
+        <DependencyLink destination="recording"/>
+        <DependencyLink destination="decode"/>
+        <DependencyLink destination="configurations"/>
+        <DependencyLink destination="transcode"/>
+    </Package>
+    <Package name="recording" x="28" y="290">
+        <DependencyLink destination="encode"/>
+        <DependencyLink destination="audio"/>
+        <DependencyLink destination="constants"/>
+        <DependencyLink destination="configurations"/>
+        <DependencyLink destination="video"/>
+    </Package>
+    <Package name="transcode" x="32" y="505"/>
+    <Package name="video" x="42" y="418"/>
+    <Package name="webcam" x="483" y="505"/>
+</PackageAnalysis>

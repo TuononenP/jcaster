@@ -43,7 +43,7 @@ import com.xuggle.xuggler.demos.VideoImage;
 public class DecodeVideo {
 
 	/**
-	 * Takes a media container (file) as an argument, opens it,
+	 * Takes a media container (file), opens it,
 	 * opens up a Swing window and displays
 	 * video frames with <i>roughly</i> the right timing.
 	 *  
