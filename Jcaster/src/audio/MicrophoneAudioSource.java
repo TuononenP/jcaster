@@ -27,17 +27,16 @@ import com.cattura.packet_multibroadcaster.value_objects.AudioPacket;
 import configurations.AudioSettings;
 import constants.AudioConstants;
 
+/**
+ * 
+ * @author Petri Tuononen
+ *
+ */
 public class MicrophoneAudioSource extends Source {
 	
-	//  Constants
 	private final byte[] TEMP_BUFFER;
-
-	//  Instance variables
 	private TargetDataLine _targetDataLine;
 
-	//----------------------------------------------------------------------------------------------
-	//  Initialize
-	//----------------------------------------------------------------------------------------------
 	public MicrophoneAudioSource (String $id, AudioSettings audioSettings) {
 		super($id, AudioVideoTypes.AUDIO);
 
@@ -53,9 +52,6 @@ public class MicrophoneAudioSource extends Source {
 		}
 	}
 
-	//----------------------------------------------------------------------------------------------
-	//  Functions
-	//----------------------------------------------------------------------------------------------
 	@Override
 	protected void packAudioPacket (AudioPacket $audioPacket) {
 		if (_targetDataLine.read(TEMP_BUFFER, 0, TEMP_BUFFER.length) > 0) {
