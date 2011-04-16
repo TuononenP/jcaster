@@ -23,6 +23,8 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import constants.VideoConstants;
+
 /**
  * Class used to display video and webcam playback.
  * 
@@ -37,10 +39,11 @@ public class VideoImage extends JFrame {
 	 * Create the frame
 	 */
 	public VideoImage(JFrame mainFrame) {
-		super();
+//		super();
 		imageComp = new ImageComponent();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.add(imageComp);
+//		getContentPane().add(imageComp);
 		this.setVisible(true);
 	}
 
@@ -48,18 +51,14 @@ public class VideoImage extends JFrame {
 		imageComp.setImage(aImage);
 	}
 
-	class ImageComponent extends JComponent {
+	private class ImageComponent extends JComponent {
 
 		private static final long serialVersionUID = -6135326042367413673L;
 		private Image mImage;
 		private Dimension mSize;
 
-		public void setImage(Image image) {
+		private void setImage(Image image) {
 			SwingUtilities.invokeLater(new ImageRunnable(image));
-		}
-
-		public void setImageSize(Dimension newSize) {
-
 		}
 
 		private class ImageRunnable implements Runnable {
@@ -83,7 +82,7 @@ public class VideoImage extends JFrame {
 		}
 
 		public ImageComponent() {
-			mSize = new Dimension(0, 0);
+			mSize = new Dimension(VideoConstants.SCREEN_WIDTH, VideoConstants.SCREEN_HEIGHT); //TODO change fixed frame size
 			setSize(mSize);
 		}
 
