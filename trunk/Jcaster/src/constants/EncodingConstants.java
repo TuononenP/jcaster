@@ -22,7 +22,7 @@ package constants;
  */
 public class EncodingConstants {
 	
-    // Constants
+    //constants
 	public static final int AUDIO_STREAM_ID = 1;
 	public static final int VIDEO_STREAM_ID = 0;
     

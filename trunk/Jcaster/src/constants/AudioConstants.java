@@ -23,13 +23,13 @@ package constants;
  */
 public class AudioConstants {
 	
-    // Constants
-    public static final int TARGET_DATA_LINE_BYTE_SIZE = 50000;                 //  Size of the buffer that is transfered between the Microphone input and the Xuggler IAudioSamples
-	public static final float SAMPLE_RATE = 44100.0F;                           //  8000, 11025, 16000, 22050, 44100 in Hz
-	public static final int SAMPLE_RATE_AS_INT = (int)SAMPLE_RATE;              				//  8000, 11025, 16000, 22050, 44100 in Hz
-	public static final int SAMPLE_SIZE_IN_BITS = 16;                           //  8, 16
-	public static final int NUMBER_OF_CHANNELS = 2;                             //  1, 2
-	public static final boolean SIGNED = true;                                  //  true, false
-	public static final boolean BIG_ENDIAN = false;                             //  true, false
+    //constants
+    public static final int TARGET_DATA_LINE_BYTE_SIZE = 50000;		//  Size of the buffer that is transfered between the Microphone input and the Xuggler IAudioSamples
+	public static final float SAMPLE_RATE = 44100.0F;               //  8000, 11025, 16000, 22050, 44100 in Hz
+	public static final int SAMPLE_RATE_AS_INT = (int)SAMPLE_RATE;  //  8000, 11025, 16000, 22050, 44100 in Hz
+	public static final int SAMPLE_SIZE_IN_BITS = 16;               //  8, 16
+	public static final int NUMBER_OF_CHANNELS = 2;                 //  1, 2
+	public static final boolean SIGNED = true;                      //  true, false
+	public static final boolean BIG_ENDIAN = false;                 //  true, false
 
 }

@@ -36,16 +36,10 @@ import constants.VideoConstants;
 
 public class Container extends Writer {
 	
-    //  Constants
     private static final TimeUnit NANOSECONDS_TIME_UNIT = TimeUnit.NANOSECONDS;
-    
-    //  Instance variables
     private IMediaWriter _mediaWriter;
     private AudioSettings audioSettings;
     
-    //----------------------------------------------------------------------------------------------
-    //  Initialize
-    //----------------------------------------------------------------------------------------------
     public Container(String $ouputDirectory, String $filename, String $extension, String $type, AudioSettings audioSettings) {
         super($ouputDirectory, $filename, $extension, $type);
         this.audioSettings = audioSettings;
@@ -80,9 +74,6 @@ public class Container extends Writer {
         _mediaWriter.close();
     }
 
-    //----------------------------------------------------------------------------------------------
-    //  Functions
-    //----------------------------------------------------------------------------------------------
     @Override
 	public void setupProcessing() {
         super.setupProcessing();
