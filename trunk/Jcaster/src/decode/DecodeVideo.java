@@ -40,7 +40,7 @@ import com.xuggle.xuggler.demos.VideoImage;
  * @author Petri Tuononen
  *
  */
-public class Decode {
+public class DecodeVideo {
 
 	/**
 	 * Takes a media container (file) as an argument, opens it,
@@ -50,7 +50,7 @@ public class Decode {
 	 * @param filename
 	 */
 	@SuppressWarnings("deprecation")
-	public Decode(String filename) {
+	public DecodeVideo(String filename) {
 		// Let's make sure that we can actually convert video pixel formats.
 		if (!IVideoResampler.isSupported(
 				IVideoResampler.Feature.FEATURE_COLORSPACECONVERSION))

@@ -39,7 +39,7 @@ import transcode.Transcode;
  * @author Petri
  *
  */
-public class TranscodeFrame extends JFrame {
+public class TranscodeWindow extends JFrame {
 
 	private static final long serialVersionUID = 3767734593941102512L;
 	private JPanel contentPane;
@@ -53,7 +53,7 @@ public class TranscodeFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public TranscodeFrame(JFrame mainFrame) {
+	public TranscodeWindow(JFrame mainFrame) {
 		this.mainFrame = mainFrame;
 		setTitle("Transcode");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
