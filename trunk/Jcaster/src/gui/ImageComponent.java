@@ -1,5 +1,6 @@
 package gui;
 
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -11,11 +12,11 @@ import constants.VideoConstants;
 
 public class ImageComponent extends JComponent {
 
-	private static final long serialVersionUID = 5285842446449759187L;
+	private static final long serialVersionUID = 6719276619890160914L;
 	private Image mImage;
 	private Dimension mSize;
 
-	protected void setImage(Image image) {
+	public void setImage(Image image) {
 		SwingUtilities.invokeLater(new ImageRunnable(image));
 	}
 
@@ -23,6 +24,7 @@ public class ImageComponent extends JComponent {
 		private final Image newImage;
 
 		public ImageRunnable(Image newImage) {
+			super();
 			this.newImage = newImage;
 		}
 
