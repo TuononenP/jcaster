@@ -46,18 +46,16 @@ import com.xuggle.xuggler.Utils;
  * @author aclarke
  * @author Petri Tuononen
  *
+ * TODO: Sync audio and video better.
  */
 public class DecodeAudioAndVideo {
 
 	/**
-	 * The audio line we'll output sound to; it'll be the default audio device on your system if available
+	 * The audio line we'll output sound to.
+	 * It'll be the default audio device on your system if available
 	 */
 	private static SourceDataLine mLine;
 
-	/**
-	 * The window we'll draw the video on.
-	 * 
-	 */
 	private static VideoWindow mScreen = null;
 
 	private static long mSystemVideoClockStartTime;
@@ -78,29 +76,29 @@ public class DecodeAudioAndVideo {
 	 */
 	@SuppressWarnings("deprecation")
 	public DecodeAudioAndVideo(String filename) {
-		// Let's make sure that we can actually convert video pixel formats.
+		//make sure that we can actually convert video pixel formats.
 		if (!IVideoResampler.isSupported(IVideoResampler.Feature.FEATURE_COLORSPACECONVERSION))
-			throw new RuntimeException("you must install the GPL version of Xuggler (with IVideoResampler support) for this demo to work");
+			throw new RuntimeException("You must install the GPL version of Xuggler (with IVideoResampler support) for this demo to work");
 
-		// Create a Xuggler container object
+		// ceate a Xuggler container object
 		IContainer container = IContainer.make();
 
-		// Open up the container
+		//open up the container
 		if (container.open(filename, IContainer.Type.READ, null) < 0)
-			throw new IllegalArgumentException("could not open file: " + filename);
+			throw new IllegalArgumentException("Could not open file: " + filename);
 
-		// query how many streams the call to open found
+		//query how many streams the call to open found
 		int numStreams = container.getNumStreams();
 
-		// and iterate through the streams to find the first audio stream
+		//iterate through the streams to find the first audio stream
 		int videoStreamId = -1;
 		IStreamCoder videoCoder = null;
 		int audioStreamId = -1;
 		IStreamCoder audioCoder = null;
 		for(int i = 0; i < numStreams; i++) {
-			// Find the stream object
+			//find the stream object
 			IStream stream = container.getStream(i);
-			// Get the pre-configured decoder that can decode this stream;
+			//get the pre-configured decoder that can decode this stream;
 			IStreamCoder coder = stream.getStreamCoder();
 
 			if (videoStreamId == -1 && coder.getCodecType() == ICodec.Type.CODEC_TYPE_VIDEO) {
@@ -113,16 +111,16 @@ public class DecodeAudioAndVideo {
 			}
 		}
 		if (videoStreamId == -1 && audioStreamId == -1)
-			throw new RuntimeException("could not find audio or video stream in container: "+filename);
+			throw new RuntimeException("Could not find audio or video stream in container: " + filename);
 
 		/*
-		 * Check if we have a video stream in this file.  If so let's open up our decoder so it can
+		 * Check if a video stream is in this file.  If so open up the decoder so it can
 		 * do work.
 		 */
 		IVideoResampler resampler = null;
 		if (videoCoder != null) {
 			if(videoCoder.open() < 0)
-				throw new RuntimeException("could not open audio decoder for container: "+filename);
+				throw new RuntimeException("Could not open audio decoder for container: "+filename);
 
 			if (videoCoder.getPixelType() != IPixelFormat.Type.BGR24) {
 				// if this stream is not in BGR24, we're going to need to
@@ -130,54 +128,38 @@ public class DecodeAudioAndVideo {
 				resampler = IVideoResampler.make(videoCoder.getWidth(), videoCoder.getHeight(), IPixelFormat.Type.BGR24,
 						videoCoder.getWidth(), videoCoder.getHeight(), videoCoder.getPixelType());
 				if (resampler == null)
-					throw new RuntimeException("could not create color space resampler for: " + filename);
+					throw new RuntimeException("Could not create color space resampler for: " + filename);
 			}
-			/*
-			 * And once we have that, we draw a window on screen
-			 */
 			openJavaVideo();
 		}
 
 		if (audioCoder != null) {
 			if (audioCoder.open() < 0)
-				throw new RuntimeException("could not open audio decoder for container: "+filename);
+				throw new RuntimeException("Could not open audio decoder for container: "+filename);
 
-			/*
-			 * And once we have that, we ask the Java Sound System to get itself ready.
-			 */
 			try {
 				openJavaSound(audioCoder);
 			}
 			catch (LineUnavailableException ex) {
-				throw new RuntimeException("unable to open sound device on your system when playing back container: "+filename);
+				throw new RuntimeException("Unable to open sound device on your system when playing back container: "+filename);
 			}
 		}
 
-
-		/*
-		 * Now, we start walking through the container looking at each packet.
-		 */
+		//loop through the container looking at each packet.
 		IPacket packet = IPacket.make();
 		mFirstVideoTimestampInStream = Global.NO_PTS;
 		mSystemVideoClockStartTime = 0;
 		while(container.readNextPacket(packet) >= 0) {
-			/*
-			 * Now we have a packet, let's see if it belongs to our video stream
-			 */
+			//check if the packet belongs to the video stream
 			if (packet.getStreamIndex() == videoStreamId) {
-				/*
-				 * We allocate a new picture to get the data out of Xuggler
-				 */
+				//allocate a new picture to get the data out of Xuggler
 				IVideoPicture picture = IVideoPicture.make(videoCoder.getPixelType(),
 						videoCoder.getWidth(), videoCoder.getHeight());
 
-				/*
-				 * Now, we decode the video, checking for any errors.
-				 * 
-				 */
+				//decode video and check for errors.
 				int bytesDecoded = videoCoder.decodeVideo(picture, packet, 0);
 				if (bytesDecoded < 0)
-					throw new RuntimeException("got error decoding audio in: " + filename);
+					throw new RuntimeException("Got error decoding audio in: " + filename);
 
 				/*
 				 * Some decoders will consume data in a packet, but will not be able to construct
@@ -194,10 +176,10 @@ public class DecodeAudioAndVideo {
 						// we must resample
 						newPic = IVideoPicture.make(resampler.getOutputPixelFormat(), picture.getWidth(), picture.getHeight());
 						if (resampler.resample(newPic, picture) < 0)
-							throw new RuntimeException("could not resample video from: " + filename);
+							throw new RuntimeException("Could not resample video from: " + filename);
 					}
 					if (newPic.getPixelType() != IPixelFormat.Type.BGR24)
-						throw new RuntimeException("could not decode video as BGR 24 bit data in: " + filename);
+						throw new RuntimeException("Could not decode video as BGR 24 bit data in: " + filename);
 
 					long delay = millisecondsUntilTimeToDisplay(newPic);
 					// if there is no audio stream; go ahead and hold up the main thread.  We'll end
@@ -231,21 +213,18 @@ public class DecodeAudioAndVideo {
 				 */
 				int offset = 0;
 
-				/*
-				 * Keep going until we've processed all data
-				 */
+				//keep going until we've processed all data
 				while(offset < packet.getSize()) {
 					int bytesDecoded = audioCoder.decodeAudio(samples, packet, offset);
 					if (bytesDecoded < 0)
-						throw new RuntimeException("got error decoding audio in: " + filename);
+						throw new RuntimeException("Got error decoding audio in: " + filename);
 					offset += bytesDecoded;
 					/*
 					 * Some decoder will consume data in a packet, but will not be able to construct
 					 * a full set of samples yet.  Therefore you should always check if you
 					 * got a complete set of samples from the decoder
 					 */
-					if (samples.isComplete())
-					{
+					if (samples.isComplete()) {
 						// note: this call will block if Java's sound buffers fill up, and we're
 						// okay with that.  That's why we have the video "sleeping" occur
 						// on another thread.
@@ -254,17 +233,14 @@ public class DecodeAudioAndVideo {
 				}
 			}
 			else {
-				/*
-				 * This packet isn't part of our video stream, so we just silently drop it.
-				 */
+				//this packet isn't part of our video stream, so we just silently drop it.
 				do {} while(false);
 			}
 
 		}
 		/*
-		 * Technically since we're exiting anyway, these will be cleaned up by 
-		 * the garbage collector... but because we're nice people and want
-		 * to be invited places for Christmas, we're going to show how to clean up.
+		 * Technically these will be cleaned up by 
+		 * the garbage collector.
 		 */
 		if (videoCoder != null) {
 			videoCoder.close();
@@ -334,40 +310,32 @@ public class DecodeAudioAndVideo {
 	}
 
 	private static void openJavaSound(IStreamCoder aAudioCoder) throws LineUnavailableException {
+		
 		AudioFormat audioFormat = new AudioFormat(aAudioCoder.getSampleRate(),
 				(int)IAudioSamples.findSampleBitDepth(aAudioCoder.getSampleFormat()),
 				aAudioCoder.getChannels(),
 				true, /* xuggler defaults to signed 16 bit samples */
 				false);
+		
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
 		mLine = (SourceDataLine) AudioSystem.getLine(info);
-		/**
-		 * if that succeeded, try opening the line.
-		 */
+		//if that succeeded, try opening the line
 		mLine.open(audioFormat);
-		/**
-		 * And if that succeed, start the line.
-		 */
+		//and if that succeed, start the line
 		mLine.start();
 	}
 
 	private static void playJavaSound(IAudioSamples aSamples) {
-		/**
-		 * We're just going to dump all the samples into the line.
-		 */
+		//dump all the samples into the line.
 		byte[] rawBytes = aSamples.getData().getByteArray(0, aSamples.getSize());
 		mLine.write(rawBytes, 0, aSamples.getSize());
 	}
      
 	private static void closeJavaSound() {
 		if (mLine != null) {
-			/*
-			 * Wait for the line to finish playing
-			 */
+			//wait for the line to finish playing
 			mLine.drain();
-			/*
-			 * Close the line.
-			 */
+			//close the line
 			mLine.close();
 			mLine = null;
 		}
