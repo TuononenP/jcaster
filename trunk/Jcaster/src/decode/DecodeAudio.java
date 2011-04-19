@@ -153,7 +153,7 @@ public class DecodeAudio {
 			audioCoder.close();
 			audioCoder = null;
 		}
-		if (container !=null) {
+		if (container != null) {
 			container.close();
 			container = null;
 		}
@@ -201,7 +201,7 @@ public class DecodeAudio {
 			 * Close the line.
 			 */
 			mLine.close();
-			mLine=null;
+			mLine = null;
 		}
 	}
 

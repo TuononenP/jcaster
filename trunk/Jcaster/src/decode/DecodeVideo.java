@@ -14,6 +14,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package decode;
 
+import gui.VideoWindow;
+
 import java.awt.image.BufferedImage;
 
 import com.xuggle.xuggler.Global;
@@ -26,15 +28,11 @@ import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IVideoPicture;
 import com.xuggle.xuggler.IVideoResampler;
 import com.xuggle.xuggler.Utils;
-import com.xuggle.xuggler.demos.VideoImage;
 
 /**
  * Takes a media container, finds the first video stream,
  * decodes that stream, and then displays the video frames,
- * at the frame-rate specified by the container, on a 
- * window.
- * 
- * NO AUDIO. TODO: Add audio stream
+ * at the frame-rate specified by the container, on a window.
  * 
  * @author aclarke
  * @author Petri Tuononen
@@ -42,6 +40,11 @@ import com.xuggle.xuggler.demos.VideoImage;
  */
 public class DecodeVideo {
 
+	/**
+	 * The window we'll draw the video on.
+	 */
+	private VideoWindow mScreen = null;
+	
 	/**
 	 * Takes a media container (file), opens it,
 	 * opens up a Swing window and displays
@@ -244,11 +247,6 @@ public class DecodeVideo {
 	}
 
 	/**
-	 * The window we'll draw the video on.
-	 */
-	private VideoImage mScreen = null;
-
-	/**
 	 * Update screen on the windows.
 	 * 
 	 * @param javaImage
@@ -261,7 +259,7 @@ public class DecodeVideo {
 	 * Opens a Swing window on screen.
 	 */
 	private void openJavaWindow() {
-		mScreen = new VideoImage();
+		mScreen = new VideoWindow();
 	}
 
 	/**
