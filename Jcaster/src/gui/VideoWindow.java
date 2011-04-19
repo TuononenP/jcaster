@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import constants.VideoConstants;
@@ -33,25 +34,24 @@ import constants.VideoConstants;
 public class VideoWindow extends JFrame {
 
 	private static final long serialVersionUID = -7257418713982383043L;
-	private final ImageComponent imageComp;
-
+	private VideoPanel panel;
+	
 	/**
 	 * Create the frame
 	 */
 	public VideoWindow() {
 		super();
-		imageComp = new ImageComponent();
+		panel = new VideoPanel();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		mainFrame.add(imageComp);
-		getContentPane().add(imageComp);
+		getContentPane().add(panel);
 	    setExtendedState(JFrame.MAXIMIZED_BOTH);  
 		setVisible(true);
 	}
 
 	public void setImage(final BufferedImage aImage) {
-		imageComp.setImage(aImage);
+		panel.setImage(aImage);
 	}
-
+	
 	private class ImageComponent extends JComponent {
 
 		private static final long serialVersionUID = -6135326042367413673L;
@@ -63,6 +63,7 @@ public class VideoWindow extends JFrame {
 		}
 
 		private class ImageRunnable implements Runnable {
+			
 			private final Image newImage;
 
 			public ImageRunnable(Image newImage) {
@@ -75,8 +76,6 @@ public class VideoWindow extends JFrame {
 				final Dimension newSize = new Dimension(mImage.getWidth(null), mImage.getHeight(null));
 				if (!newSize.equals(mSize)) {
 					ImageComponent.this.mSize = newSize;
-					VideoWindow.this.setSize(mImage.getWidth(null), mImage.getHeight(null));
-					VideoWindow.this.setVisible(true);
 				}
 				repaint();
 			}
@@ -92,6 +91,23 @@ public class VideoWindow extends JFrame {
 				g.drawImage(mImage, 0, 0, this);
 		}
 
+	}
+	
+	private class VideoPanel extends JPanel {
+		
+		private static final long serialVersionUID = -2917832272068564483L;
+		private final ImageComponent imageComp;
+		
+		public VideoPanel() {
+			imageComp = new ImageComponent();
+			getContentPane().add(imageComp);
+			setVisible(true);	
+		}
+		
+		public void setImage(final BufferedImage aImage) {
+			imageComp.setImage(aImage);
+		}
+		
 	}
 	
 }

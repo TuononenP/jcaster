@@ -14,7 +14,6 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package decode;
 
-import gui.VideoFrame;
 import gui.VideoWindow;
 
 import javax.sound.sampled.AudioFormat;
