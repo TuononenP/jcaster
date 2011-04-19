@@ -30,21 +30,22 @@ import constants.VideoConstants;
  * 
  * @author Petri Tuononen
  */
-public class VideoImage extends JFrame {
+public class VideoWindow extends JFrame {
 
-	private static final long serialVersionUID = 1011292427017666212L;
+	private static final long serialVersionUID = -7257418713982383043L;
 	private final ImageComponent imageComp;
 
 	/**
 	 * Create the frame
 	 */
-	public VideoImage(JFrame mainFrame) {
-//		super();
+	public VideoWindow() {
+		super();
 		imageComp = new ImageComponent();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.add(imageComp);
-//		getContentPane().add(imageComp);
-		this.setVisible(true);
+//		mainFrame.add(imageComp);
+		getContentPane().add(imageComp);
+	    setExtendedState(JFrame.MAXIMIZED_BOTH);  
+		setVisible(true);
 	}
 
 	public void setImage(final BufferedImage aImage) {
@@ -74,8 +75,8 @@ public class VideoImage extends JFrame {
 				final Dimension newSize = new Dimension(mImage.getWidth(null), mImage.getHeight(null));
 				if (!newSize.equals(mSize)) {
 					ImageComponent.this.mSize = newSize;
-					VideoImage.this.setSize(mImage.getWidth(null), mImage.getHeight(null));
-					VideoImage.this.setVisible(true);
+					VideoWindow.this.setSize(mImage.getWidth(null), mImage.getHeight(null));
+					VideoWindow.this.setVisible(true);
 				}
 				repaint();
 			}

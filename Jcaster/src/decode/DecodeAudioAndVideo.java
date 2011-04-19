@@ -14,6 +14,9 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package decode;
 
+import gui.VideoFrame;
+import gui.VideoWindow;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
@@ -31,7 +34,6 @@ import com.xuggle.xuggler.IStreamCoder;
 import com.xuggle.xuggler.IVideoPicture;
 import com.xuggle.xuggler.IVideoResampler;
 import com.xuggle.xuggler.Utils;
-import com.xuggle.xuggler.demos.VideoImage;
 
 /**
  * Takes a media container, finds the first video stream,
@@ -57,12 +59,17 @@ public class DecodeAudioAndVideo {
 	 * The window we'll draw the video on.
 	 * 
 	 */
-	private static VideoImage mScreen = null;
+	private static VideoWindow mScreen = null;
 
 	private static long mSystemVideoClockStartTime;
 
 	private static long mFirstVideoTimestampInStream;
 
+	//for testing purposes only
+	public static void main(String[] args) {
+		new DecodeAudioAndVideo("C:\\Users\\Pepe\\Desktop\\test.mp4");
+	}
+	
 	/**
 	 * Takes a media container (file), opens it,
 	 * plays audio as quickly as it can, and opens up a Swing window and displays
@@ -205,7 +212,6 @@ public class DecodeAudioAndVideo {
 					}
 
 					// And finally, convert the picture to an image and display it
-
 					mScreen.setImage(Utils.videoPictureToImage(newPic));
 				}
 			}
@@ -317,7 +323,7 @@ public class DecodeAudioAndVideo {
 	 * Opens a Swing window on screen.
 	 */
 	private static void openJavaVideo() {
-		mScreen = new VideoImage();
+		mScreen = new VideoWindow();
 	}
 
 	/**
@@ -364,7 +370,7 @@ public class DecodeAudioAndVideo {
 			 * Close the line.
 			 */
 			mLine.close();
-			mLine=null;
+			mLine = null;
 		}
 	}
 	
