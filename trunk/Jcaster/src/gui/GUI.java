@@ -843,7 +843,6 @@ public class GUI {
 	 * Playback (decode) media file.
 	 */
 	private void playback(String filename) {
-		System.out.println(filename);
 		//if audio
 		String extension = filename.substring(filename.length()-3);
 		//TODO: test other audio formats
