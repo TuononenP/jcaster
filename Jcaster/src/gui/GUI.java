@@ -66,7 +66,7 @@ import java.awt.Font;
  * @author Petri Tuononen
  *
  */
-public class JcasterGUI {
+public class GUI {
 
 	//global variables
 	private JFrame frmJcaster;
@@ -112,7 +112,7 @@ public class JcasterGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					JcasterGUI window = new JcasterGUI();
+					GUI window = new GUI();
 					window.frmJcaster.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -124,7 +124,7 @@ public class JcasterGUI {
 	/**
 	 * Create the application.
 	 */
-	public JcasterGUI() {
+	public GUI() {
 		initialize();
 	}
 
@@ -677,7 +677,12 @@ public class JcasterGUI {
 		try {
 			String saveLocation = saveLocTextField.getText();
 			String filename = filenameTextField.getText();
-			String extension = getSelectedExtensionRadioButtonName();
+			String extension = null;
+			if (getSelectedAudioVideoTypeRadioButtonName() == AudioVideoTypes.AUDIO) {
+				extension = "mp3";
+			} else {
+				extension = getSelectedExtensionRadioButtonName();
+			}
 			String selectedAudioVideoType = getSelectedAudioVideoTypeRadioButtonName();
 			if(selectedAudioVideoType.equalsIgnoreCase(AudioVideoTypes.AUDIO_AND_VIDEO)) {
 				settings = new CaptureSettings(AudioVideoTypes.AUDIO_AND_VIDEO, saveLocation, filename, extension, captureDuration);
