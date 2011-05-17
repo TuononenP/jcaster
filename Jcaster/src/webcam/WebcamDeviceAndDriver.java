@@ -55,7 +55,7 @@ public class WebcamDeviceAndDriver {
 			setDriverName("video4linux2");
 			setDeviceName("/dev/video0");
 		} else if ( (os.indexOf("mac") >= 0) == true ) { //Mac
-			//TODO: find out driver and device names for mac
+			//TODO: find out driver and device names for mac. Note: FFmpeg may not even have Mac webcam support.
 		}
 	}
 

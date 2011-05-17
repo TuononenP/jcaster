@@ -314,7 +314,7 @@ public class DecodeAudioAndVideo {
 		AudioFormat audioFormat = new AudioFormat(aAudioCoder.getSampleRate(),
 				(int)IAudioSamples.findSampleBitDepth(aAudioCoder.getSampleFormat()),
 				aAudioCoder.getChannels(),
-				true, /* xuggler defaults to signed 16 bit samples */
+				true,
 				false);
 		
 		DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);

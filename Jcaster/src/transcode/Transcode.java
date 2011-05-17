@@ -14,6 +14,8 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package transcode;
 
+import java.io.File;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -27,8 +29,6 @@ import com.xuggle.mediatool.ToolFactory;
  * 
  * @author Petri Tuononen
  *
- * TODO: Add a check that if input and output formats are same
- * 		 then there is not need to transcode.
  */
 public class Transcode {
 
@@ -40,25 +40,43 @@ public class Transcode {
 	 * @param mainFrame
 	 */
 	public Transcode(String inputPath, String outputPath, JFrame mainFrame) {
-		//create a media reader
-		IMediaReader mediaReader = ToolFactory.makeReader(inputPath);
+		//check that the input file exists
+		File inputFile = new File(inputPath);
+		File output = new File(outputPath);
+		if (!inputFile.exists()) {
+			JOptionPane.showMessageDialog(mainFrame, "Input file does not exist: " + inputFile);
+		}
+		//check that the output path exists
+		else if (!output.exists()) {
+			JOptionPane.showMessageDialog(mainFrame, "Output path does not exist: " + outputPath);
+		}
+		//if the formats are the same -> no need to transcode
+		else if (inputPath.substring(inputPath.length()-3).equalsIgnoreCase(outputPath.substring(inputPath.length()-3))) {
+			JOptionPane.showMessageDialog(mainFrame, "No need to transcode -> input and output formats are the same.");
+		}
+		else {
+			//create a media reader
+			IMediaReader mediaReader = ToolFactory.makeReader(inputPath);
 
-		//create a media writer
-		IMediaWriter mediaWriter = ToolFactory.makeWriter(outputPath, mediaReader);
+			//create a media writer
+			IMediaWriter mediaWriter = ToolFactory.makeWriter(outputPath, mediaReader);
 
-		//add a writer to the reader, to create the output file
-		mediaReader.addListener(mediaWriter);
+			//add a writer to the reader, to create the output file
+			mediaReader.addListener(mediaWriter);
 
-		//create a media viewer with stats enabled
-//		IMediaViewer mediaViewer = ToolFactory.makeViewer(true);
+			//create a media viewer with stats enabled
+//			IMediaViewer mediaViewer = ToolFactory.makeViewer(true);
 
-		//add a viewer to the reader, to see the decoded media
-//		mediaReader.addListener(mediaViewer);
+			//add a viewer to the reader, to see the decoded media
+//			mediaReader.addListener(mediaViewer);
 
-		//read and decode packets from the source file and
-		//dispatch decoded audio and video to the writer
-		while (mediaReader.readPacket() == null);
-		JOptionPane.showMessageDialog(mainFrame, "Transcoding finished.");
+			/*
+			 * read and decode packets from the source file and
+			 * dispatch decoded audio and video to the writer
+			 */
+			while (mediaReader.readPacket() == null);
+			JOptionPane.showMessageDialog(mainFrame, "Transcoding finished.");
+		}
 	}
 	
 }
