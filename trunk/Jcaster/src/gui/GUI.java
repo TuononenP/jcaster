@@ -53,6 +53,7 @@ import javax.swing.JRadioButton;
 
 import com.cattura.packet_multibroadcaster.constants.AudioVideoTypes;
 
+import decode.DecodeAudio;
 import decode.DecodeVideo;
 
 import java.awt.GridLayout;
@@ -842,11 +843,23 @@ public class GUI {
 	 * Playback (decode) media file.
 	 */
 	private void playback(String filename) {
-		try {
-			new DecodeVideo(filename);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
+		System.out.println(filename);
+		//if audio
+		String extension = filename.substring(filename.length()-3);
+		//TODO: test other audio formats
+		if (extension.equalsIgnoreCase("mp3")) { //if audio
+			try {
+				new DecodeAudio(filename);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else { //if video
+			try {
+				new DecodeVideo(filename);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		}
 	}
 
 	/**
@@ -985,8 +998,15 @@ public class GUI {
 	 * @return Absolute output path.
 	 */
 	private String getFullOutputPath() {
-		return saveLocTextField.getText() 
-		+ filenameTextField.getText() + "." + getSelectedExtensionRadioButtonName();
+		if (getSelectedAudioVideoTypeRadioButtonName() == AudioVideoTypes.AUDIO) {
+			return saveLocTextField.getText() 
+					+ filenameTextField.getText() + "." + "mp3";
+		} else {
+			return saveLocTextField.getText() 
+					+ filenameTextField.getText() + "." + getSelectedExtensionRadioButtonName();
+		}
+
+		//TODO: Video and audio formats
 	}
 
 	/**
