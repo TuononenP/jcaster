@@ -843,10 +843,7 @@ public class GUI {
 	 * Playback (decode) media file.
 	 */
 	private void playback(String filename) {
-		//if audio
-		String extension = filename.substring(filename.length()-3);
-		//TODO: test other audio formats
-		if (extension.equalsIgnoreCase("mp3")) { //if audio
+		if (getSelectedAudioVideoTypeRadioButtonName() == AudioVideoTypes.AUDIO) { //if audio
 			try {
 				new DecodeAudio(filename);
 			} catch (Exception e) {
@@ -999,13 +996,11 @@ public class GUI {
 	private String getFullOutputPath() {
 		if (getSelectedAudioVideoTypeRadioButtonName() == AudioVideoTypes.AUDIO) {
 			return saveLocTextField.getText() 
-					+ filenameTextField.getText() + "." + "mp3";
+					+ filenameTextField.getText() + "." + getSelectedAudioFormat();
 		} else {
 			return saveLocTextField.getText() 
 					+ filenameTextField.getText() + "." + getSelectedExtensionRadioButtonName();
 		}
-
-		//TODO: Video and audio formats
 	}
 
 	/**
