@@ -19,11 +19,10 @@ import java.awt.image.BufferedImage;
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
 import com.xuggle.xuggler.IContainerFormat;
-import com.xuggle.xuggler.IContainerParameters;
+//import com.xuggle.xuggler.IContainerParameters;
 import com.xuggle.xuggler.IError;
 import com.xuggle.xuggler.IPacket;
 import com.xuggle.xuggler.IPixelFormat;
-import com.xuggle.xuggler.IRational;
 import com.xuggle.xuggler.IStream;
 import com.xuggle.xuggler.IStreamCoder;
 import com.xuggle.xuggler.IVideoPicture;
@@ -65,17 +64,17 @@ public class DisplayWebcamVideo {
 		// Devices, unlike most files, need to have parameters set in order
 		// for Xuggler to know how to configure them.  For a webcam, these
 		// parameters make sense
-		IContainerParameters params = IContainerParameters.make();
+		//IContainerParameters params = IContainerParameters.make();
 
 		// The timebase here is used as the camera frame rate
-		params.setTimeBase(IRational.make(30,1)); //30fps
+		//params.setTimeBase(IRational.make(30,1)); //30fps
 
 		// we need to tell the driver what video with and height to use
-		params.setVideoWidth(320);
-		params.setVideoHeight(240);
+		//params.setVideoWidth(320);
+		//params.setVideoHeight(240);
 
 		// and finally, we set these parameters on the container before opening
-		container.setParameters(params);
+		//container.setParameters(params);
 
 		// Tell Xuggler about the device format
 		IContainerFormat format = IContainerFormat.make();
